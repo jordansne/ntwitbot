@@ -1,0 +1,3 @@
+- Register event for listening to tweets
+- Register event for listening to replies to tweets
+- Handle tweets of original twitter.

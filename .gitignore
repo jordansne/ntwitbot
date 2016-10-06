@@ -1,0 +1,3 @@
+config/secret.json
+config/setup.json
+*.DS_STORE
