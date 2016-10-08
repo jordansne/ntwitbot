@@ -2,10 +2,20 @@
   "name": "ntwitbot",
   "version": "1.0.0",
   "description": "A simple interactive twitter bot.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test has been setup\" && exit 1"
-  },
   "author": "Jordan Sne",
+  "main": "index.js",
+  "dependencies": {
+      "twitter": "^1.4.0"
+  },
+  "scripts": {
+    "start": "node --use-strict index.js"
+  },
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/jordansne/ntwitbot"
+  },
+  "bugs": {
+      "url": "https://github.com/jordansne/ntwitbot/issues"
+  },
   "license": "GPL-3.0"
 }
