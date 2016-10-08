@@ -20,10 +20,9 @@
 
 const twitterModule  = require('twitter'),
       fs             = require('fs'),
-      action         = require('./action.js'),
-      data           = require('./data.js'),
-      event          = require('./event.js');
+      action         = require('./lib/action.js'),
+      data           = require('./lib/data.js'),
+      event          = require('./lib/event.js');
 
 const secretData = JSON.parse(fs.readFileSync('./config/secret.json')),
       twitterPkg = new twitterModule(secretData);
-
