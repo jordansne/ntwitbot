@@ -1,4 +1,4 @@
 {
-    "botHandle": "INSERT HERE",
+    "ownID": "INSERT HERE (AS INT)",
     "userToErrorReport": "INSERT HERE"
 }
