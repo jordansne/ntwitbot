@@ -5,17 +5,17 @@
   "author": "Jordan Sne",
   "main": "index.js",
   "dependencies": {
-      "twitter": "^1.4.0"
+    "twitter": "^1.4.0"
   },
   "scripts": {
     "start": "node --use-strict index.js"
   },
   "repository": {
-      "type": "git",
-      "url": "https://github.com/jordansne/ntwitbot"
+    "type": "git",
+    "url": "https://github.com/jordansne/ntwitbot"
   },
   "bugs": {
-      "url": "https://github.com/jordansne/ntwitbot/issues"
+    "url": "https://github.com/jordansne/ntwitbot/issues"
   },
   "license": "GPL-3.0"
 }
