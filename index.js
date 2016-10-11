@@ -26,3 +26,7 @@ const twitterModule  = require('twitter'),
 
 const secretData = JSON.parse(fs.readFileSync('./config/secret.json')),
       twitterPkg = new twitterModule(secretData);
+
+const actionHandler = new action(twitterPkg),
+      dataHandler   = new data(twitterPkg),
+      eventHandler  = new event(twitterPkg, actionHandler, dataHandler);
