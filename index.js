@@ -31,6 +31,8 @@ const actionHandler = new action(twitterPkg),
       dataHandler   = new data(twitterPkg),
       eventHandler  = new event(twitterPkg, actionHandler, dataHandler);
 
+console.log("[INFO] Starting NTwitBot..");
+
 const userData = {
     include_entities: false,
     skip_status: true
@@ -39,17 +41,17 @@ const userData = {
 twitterPkg.get('account/verify_credentials', userData, (error, account, response) => {
     if (error) {
         if (error[0].code === 32) {
-            console.log("[ERROR] Incorrect secret data provided, please edit ./config/secret.json");
+            console.error("[ERROR] Incorrect secret data provided, please edit ./config/secret.json");
         } else {
-            console.log("[ERROR] Failed to verify credentials");
-            console.log("[ERROR]     Error message: " + error[0].message);
+            console.error("[ERROR] Failed to verify credentials");
+            console.error("[ERROR]     Error message: %s", error[0].message);
         }
 
-        console.log("[ERROR] Stopping..");
+        console.error("[ERROR] Stopping..");
         return;
     }
 
-    console.log("[INFO] Verified User credentials, User ID is: " + account.id_str);
+    console.log("[INFO] Verified Bot credentials, User ID is: %s", account.id_str);
     dataHandler.ownID = account.id_str;
 
     eventHandler.start();
