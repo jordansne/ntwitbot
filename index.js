@@ -30,3 +30,27 @@ const secretData = JSON.parse(fs.readFileSync('./config/secret.json')),
 const actionHandler = new action(twitterPkg),
       dataHandler   = new data(twitterPkg),
       eventHandler  = new event(twitterPkg, actionHandler, dataHandler);
+
+const userData = {
+    include_entities: false,
+    skip_status: true
+};
+
+twitterPkg.get('account/verify_credentials', userData, (error, account, response) => {
+    if (error) {
+        if (error[0].code === 32) {
+            console.log("[ERROR] Incorrect secret data provided, please edit ./config/secret.json");
+        } else {
+            console.log("[ERROR] Failed to verify credentials");
+            console.log("[ERROR]     Error message: " + error[0].message);
+        }
+
+        console.log("[ERROR] Stopping..");
+        return;
+    }
+
+    console.log("[INFO] Verified User credentials, User ID is: " + account.id_str);
+    dataHandler.ownID = account.id_str;
+
+    eventHandler.start();
+});
