@@ -16,8 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* jshint esversion:6, node: true */
-
 const twitterModule  = require('twitter'),
       fs             = require('fs'),
       action         = require('./lib/action.js'),
