@@ -20,16 +20,18 @@ const twitterModule  = require('twitter'),
       fs             = require('fs'),
       action         = require('./lib/action.js'),
       data           = require('./lib/data.js'),
-      event          = require('./lib/event.js');
-
-console.log("[INFO] Starting NTwitBot..");
+      event          = require('./lib/event.js'),
+      util           = require('./lib/util.js');
 
 const secretData = JSON.parse(fs.readFileSync('./config/secret.json')),
-      twitterPkg = new twitterModule(secretData);
+      twitterPkg = new twitterModule(secretData),
+      utils      = new util(twitterPkg);
+
+utils.log("Starting NTwitBot..");
 
 const actionHandler = new action(twitterPkg),
-      dataHandler   = new data(twitterPkg),
-      eventHandler  = new event(twitterPkg, actionHandler, dataHandler);
+      dataHandler   = new data(twitterPkg, utils),
+      eventHandler  = new event(twitterPkg, actionHandler, dataHandler, utils);
 
 const userData = {
     include_entities: false,
@@ -38,18 +40,18 @@ const userData = {
 
 twitterPkg.get('account/verify_credentials', userData, (error, account, response) => {
     if (error) {
-        if (error[0].code === 32) {
-            console.error("[ERROR] FATAL: Incorrect secret data provided, please edit ./config/secret.json");
+        if (error.code === 32) {
+            utils.logError("FATAL: Incorrect secret data provided, please edit ./config/secret.json");
         } else {
-            console.error("[ERROR] FATAL: Failed to verify credentials");
-            console.error("[ERROR] FATAL:     Error message: %s", error[0].message);
+            utils.logError("FATAL: Failed to verify credentials");
+            utils.logError("FATAL:     Error message: " + error.message);
         }
 
-        console.error("[ERROR] FATAL: Exiting..");
+        utils.logError("FATAL: Exiting..");
         process.exit(1);
     }
 
-    console.log("[INFO] Verified Bot credentials, User ID is: %s", account.id_str);
+    utils.log("Verified Bot credentials, User ID is: " + account.id_str);
     dataHandler.ownID = account.id_str;
 
     eventHandler.start();

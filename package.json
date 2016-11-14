@@ -5,7 +5,8 @@
   "author": "Jordan Sne",
   "main": "index.js",
   "dependencies": {
-    "twitter": "^1.4.0"
+    "twitter": "^1.4.0",
+    "colors": "^1.1.2"
   },
   "scripts": {
     "start": "node --use-strict index.js"
