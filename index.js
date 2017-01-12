@@ -38,6 +38,7 @@ const userData = {
     skip_status: true
 };
 
+// Verify secret data
 twitterPkg.get('account/verify_credentials', userData, (error, account, response) => {
     if (error) {
         if (error.code === 32) {
