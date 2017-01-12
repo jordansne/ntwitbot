@@ -1,4 +1,6 @@
+config/secret.json
+config/setup.json
 data/*
-.eslintrc.json
 node_modules/
+.eslintrc.json
 *.DS_STORE
