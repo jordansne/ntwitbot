@@ -33,8 +33,8 @@ utils.log("Starting NTwitBot..");
 
 const dataHandler   = new data(twitterPkg, utils),
       generator     = new generate(dataHandler, utils),
-      actionHandler = new action(generator, twitterPkg),
-      eventHandler  = new event(twitterPkg, actionHandler, dataHandler, utils);
+      actionHandler = new action(generator, twitterPkg, utils),
+      eventHandler  = new event(twitterPkg, actionHandler, dataHandler, generator, utils);
 
 const userData = {
     include_entities: false,
