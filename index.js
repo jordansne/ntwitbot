@@ -25,8 +25,9 @@ const twitterModule  = require('twitter'),
       util           = require('./lib/util.js');
 
 const secretData = JSON.parse(fs.readFileSync('./config/secret.json')),
+      setupData = JSON.parse(fs.readFileSync('./config/setup.json')),
       twitterPkg = new twitterModule(secretData),
-      utils      = new util(twitterPkg);
+      utils      = new util(twitterPkg, setupData.debug);
 
 utils.log("Starting NTwitBot..");
 

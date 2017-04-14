@@ -1,3 +1,4 @@
 {
-    "userToErrorReport": ""
+    "userToErrorReport": "",
+    debug: false
 }
