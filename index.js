@@ -21,6 +21,7 @@ const twitterModule  = require('twitter'),
       action         = require('./lib/action.js'),
       data           = require('./lib/data.js'),
       event          = require('./lib/event.js'),
+      generate       = require('./lib/generate.js'),
       util           = require('./lib/util.js');
 
 const secretData = JSON.parse(fs.readFileSync('./config/secret.json')),
@@ -29,8 +30,9 @@ const secretData = JSON.parse(fs.readFileSync('./config/secret.json')),
 
 utils.log("Starting NTwitBot..");
 
-const actionHandler = new action(twitterPkg),
-      dataHandler   = new data(twitterPkg, utils),
+const dataHandler   = new data(twitterPkg, utils),
+      generator     = new generate(dataHandler, utils),
+      actionHandler = new action(generator, twitterPkg),
       eventHandler  = new event(twitterPkg, actionHandler, dataHandler, utils);
 
 const userData = {
