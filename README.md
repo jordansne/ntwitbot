@@ -13,14 +13,14 @@ Node.js
 
 ## Setup
 
-    git clone https://github.com/jordansne/ntwitbot.git
-    npm install
+    $ git clone https://github.com/jordansne/ntwitbot.git
+    $ npm install
 
 To use this with twitter you will need a create an app if you have not already, then save the consumer key & secret, and access key & secret in the config/secret.json file.
 
 ## Usage
 
-    npm start
+    $ npm start
 
 ## License
 
