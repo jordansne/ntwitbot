@@ -16,33 +16,62 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const twitterModule  = require('twitter'),
+const TwitterModule  = require('twitter'),
       fs             = require('fs'),
-      action         = require('./lib/action.js'),
-      data           = require('./lib/data.js'),
-      event          = require('./lib/event.js'),
-      generate       = require('./lib/generate.js'),
-      util           = require('./lib/util.js');
+      Action         = require('./lib/action.js'),
+      Data           = require('./lib/data.js'),
+      Event          = require('./lib/event.js'),
+      Generate       = require('./lib/generate.js'),
+      Util           = require('./lib/util.js');
 
-const secretData = JSON.parse(fs.readFileSync('./config/secret.json')),
-      setupData = JSON.parse(fs.readFileSync('./config/setup.json')),
-      twitterPkg = new twitterModule(secretData),
-      utils      = new util(twitterPkg, setupData.debug);
+const utils      = new Util(),
+      secretData = readFileObject('./config/secret.json'),
+      setupData  = readFileObject('./config/setup.json'),
+      twitter    = new TwitterModule(secretData);
 
 utils.log("Starting NTwitBot..");
 
-const dataHandler   = new data(twitterPkg, utils),
-      generator     = new generate(dataHandler, utils),
-      actionHandler = new action(generator, twitterPkg, utils),
-      eventHandler  = new event(twitterPkg, actionHandler, dataHandler, generator, utils);
+const dataHandler   = new Data(twitter, utils),
+      generator     = new Generate(dataHandler, utils),
+      actionHandler = new Action(generator, twitter, utils),
+      eventHandler  = new Event(twitter, actionHandler, dataHandler, generator, utils);
 
 const userData = {
     include_entities: false,
     skip_status: true
 };
 
+/*
+ * Return secret data, stop program if error occurs.
+ *   path    - String: Path to file.
+ *   Returns - Object: JSON Object representation of the file contents.
+ */
+function readFileObject(path) {
+    let read, data = null;
+
+    try {
+        read = fs.readFileSync(path);
+        data = JSON.parse(read);
+    } catch (err) {
+        utils.logError("FATAL: Failed to verify configuration");
+        utils.logError("Error:     " + err.message);
+    }
+
+    if (data !== null) {
+        console.log(data);
+        return data;
+    } else {
+        process.exit(1);
+    }
+}
+
+// Enable debug flag if required
+if (setupData.debug) {
+    utils.setDebug(true);
+}
+
 // Verify secret data
-twitterPkg.get('account/verify_credentials', userData, (error, account, response) => {
+twitter.get('account/verify_credentials', userData, (error, account, response) => {
     if (error) {
         if (error.code === 32) {
             utils.logError("FATAL: Incorrect secret data provided, please edit ./config/secret.json");
