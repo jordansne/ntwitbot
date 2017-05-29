@@ -16,18 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const TwitterModule  = require('twitter'),
-      fs             = require('fs'),
-      Action         = require('./lib/action.js'),
-      Data           = require('./lib/data.js'),
-      Event          = require('./lib/event.js'),
-      Generate       = require('./lib/generate.js'),
-      Util           = require('./lib/util.js');
+const TwitterModule = require('twitter'),
+      fs            = require('fs'),
+      Action        = require('./lib/action.js'),
+      Data          = require('./lib/data.js'),
+      Event         = require('./lib/event.js'),
+      Generate      = require('./lib/generate.js'),
+      Util          = require('./lib/util.js');
 
-const utils      = new Util(),
-      secretData = readFileObject('./config/secret.json'),
-      setupData  = readFileObject('./config/setup.json'),
-      twitter    = new TwitterModule(secretData);
+const utils         = new Util(),
+      secretData    = readFileObject('./config/secret.json'),
+      setupData     = readFileObject('./config/setup.json'),
+      twitter       = new TwitterModule(secretData);
 
 utils.log("Starting NTwitBot..");
 
@@ -54,7 +54,7 @@ function readFileObject(path) {
         data = JSON.parse(read);
     } catch (err) {
         utils.logError("FATAL: Failed to verify configuration");
-        utils.logError("Error:     " + err.message);
+        utils.logError("FATAL:     Error message: " + err.message);
     }
 
     if (data !== null) {
