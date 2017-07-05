@@ -60,6 +60,7 @@ function readFileObject(path) {
     if (data !== null) {
         return data;
     } else {
+        utils.logError("FATAL: Exiting..");
         process.exit(1);
     }
 }
