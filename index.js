@@ -58,7 +58,6 @@ function readFileObject(path) {
     }
 
     if (data !== null) {
-        console.log(data);
         return data;
     } else {
         process.exit(1);
