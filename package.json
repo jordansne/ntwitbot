@@ -10,6 +10,7 @@
     "twitter": "^1.4.0"
   },
   "scripts": {
+    "prestart": "npm install",
     "start": "node --use-strict index.js"
   },
   "repository": {
