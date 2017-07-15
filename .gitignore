@@ -2,5 +2,8 @@ config/secret.json
 config/setup.json
 data/*
 node_modules/
+logs
+*.log
+npm-debug.log*
 .eslintrc.json
 *.DS_STORE
