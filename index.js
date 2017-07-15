@@ -18,9 +18,8 @@
 
 const TwitterModule = require('twitter'),
       fs            = require('fs'),
-      Action        = require('./lib/action.js'),
       Data          = require('./lib/data.js'),
-      Event         = require('./lib/event.js'),
+      Main          = require('./lib/main.js'),
       Generate      = require('./lib/generate.js'),
       Util          = require('./lib/util.js');
 
@@ -31,10 +30,9 @@ const utils         = new Util(),
 
 utils.log("Starting NTwitBot..");
 
-const dataHandler   = new Data(twitter, utils),
-      generator     = new Generate(dataHandler, utils),
-      actionHandler = new Action(generator, twitter, utils),
-      eventHandler  = new Event(twitter, actionHandler, dataHandler, generator, utils);
+const dataHandler = new Data(twitter, utils),
+      generator   = new Generate(dataHandler, utils),
+      main        = new Main(twitter, dataHandler, generator, utils);
 
 const userData = {
     include_entities: false,
@@ -87,5 +85,5 @@ twitter.get('account/verify_credentials', userData, (error, account, response) =
     utils.log("Verified Bot credentials, User ID is: " + account.id_str);
     dataHandler.ownID = account.id_str;
 
-    eventHandler.start();
+    main.start();
 });
