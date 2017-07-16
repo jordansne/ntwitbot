@@ -30,7 +30,7 @@ const utils         = new Util(),
 
 utils.log("Starting NTwitBot..");
 
-const dataHandler = new Data(twitter, utils),
+const dataHandler = new Data(utils),
       generator   = new Generate(dataHandler, utils),
       main        = new Main(twitter, dataHandler, generator, utils);
 
