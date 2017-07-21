@@ -1,5 +1,7 @@
 config/secret.json
+config/secret.js
 config/setup.json
+config/setup.js
 data/*
 node_modules/
 logs
