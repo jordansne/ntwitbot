@@ -8,4 +8,5 @@ logs
 *.log
 npm-debug.log*
 .eslintrc.json
+.tern-project
 *.DS_STORE
