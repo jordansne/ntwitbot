@@ -17,7 +17,6 @@
     "eslint-plugin-standard": "^2.0.1"
   },
   "scripts": {
-    "prestart": "npm install",
     "start": "node --use-strict index.js"
   },
   "repository": {
