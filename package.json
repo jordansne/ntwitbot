@@ -14,10 +14,12 @@
     "eslint": "^3.7.1",
     "eslint-config-standard": "^6.2.0",
     "eslint-plugin-promise": "^3.0.0",
-    "eslint-plugin-standard": "^2.0.1"
+    "eslint-plugin-standard": "^2.0.1",
+    "jest": "21.1.0"
   },
   "scripts": {
-    "start": "node --use-strict index.js"
+    "start": "node --use-strict index.js",
+    "test" : "jest"
   },
   "repository": {
     "type": "git",
