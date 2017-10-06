@@ -22,36 +22,31 @@ const processor = new Process(new Util());
 
 describe('Process', () => {
     it('should filter mentions and links from words', () => {
-        const words = ["Test", "@test", "Test2", "http://test.ca", "Test3"];
+        const words = ["good", "@bad", "http://bad.ca", "good2"];
         const filtered = processor.filterWords(words);
 
-        expect(filtered).toMatchObject(["Test", "Test2", "Test3"]);
+        expect(filtered).toMatchObject(["good", "good2"]);
     });
 
     it('should convert words to lowercase', () => {
-        const words = ["This", "is", "A", "TEST."];
+        const words = ["Test", "sentENCE."];
         processor.converToLowercase(words);
 
-        expect(words[0]).toBe("this");
-        expect(words[2]).toBe("a");
-        expect(words[3]).toBe("test.");
+        expect(words).toMatchObject(["test", "sentence."]);
     });
 
     it('should capitalize sentences', () => {
-        const words = ["this", "is", "a", "sentence.", "another", "one!", "or", "is", "it?", "yes"];
+        const words = ["test", "one.", "test", "two!", "test", "three?", "final"];
         processor.capitalizeSentences(words);
 
-        expect(words[0]).toBe("This");
-        expect(words[4]).toBe("Another");
-        expect(words[6]).toBe("Or");
-        expect(words[9]).toBe("Yes");
+        expect(words).toMatchObject(["Test", "one.", "Test", "two!", "Test", "three?", "Final"]);
     });
 
     it('should append periods to the end of tweets', () => {
-        const words = ["This", "is", "a", "sentence"];
+        const words = ["Test", "sentence"];
         processor.appendPeriod(words);
 
-        expect(words[3]).toBe("sentence.");
+        expect(words).toMatchObject(["Test", "sentence."]);
     });
 
     it('should add new keys in a data object', () => {
