@@ -53,4 +53,46 @@ describe('Process', () => {
 
         expect(words[3]).toBe("sentence.");
     });
+
+    it('should add new keys in a data object', () => {
+        // Use a mock utils object to mock the getTime function that is used by the processor
+        const timeMock = jest.fn().mockReturnValue(201710302350);
+        const processorMocked = new Process({ getTime: timeMock });
+        const data = {};
+        const words = ["Test", "sentence", "one."];
+
+        processorMocked.appendData(data, words);
+
+        expect(data).toHaveProperty(
+            "Test sentence", [{
+                word: "one.",
+                time: 201710302350
+            }]
+        );
+    });
+
+    it('should append to existing keys in a data object', () => {
+        // Use a mock utils object to mock the getTime function that is used by the processor
+        const timeMock = jest.fn().mockReturnValue(201710302351);
+        const processorMocked = new Process({ getTime: timeMock });
+        const data = {
+            "Test sentence": [{
+                word: "one.",
+                time: 201710302350
+            }]
+        };
+        const words = ["Test", "sentence", "two."];
+
+        processorMocked.appendData(data, words);
+
+        expect(data).toHaveProperty(
+            "Test sentence", [{
+                word: "one.",
+                time: 201710302350
+            }, {
+                word: "two.",
+                time: 201710302351
+            }]
+        );
+    });
 });
