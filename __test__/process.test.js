@@ -18,9 +18,21 @@
 
 const Process = require('../lib/process.js');
 const Util    = require('../lib/util.js');
-const processor = new Process(new Util());
+let processor;
+
+const MOCK_TIME           = 201710302350;
+const MOCK_TIME_FORMATTED = "10/30/2017 23:50:15";
 
 describe('Process', () => {
+    beforeAll(() => {
+        // Override time methods with time constants above
+        const utilsMock = new Util();
+        utilsMock.getTime = jest.fn(() => MOCK_TIME);
+        utilsMock.getFormattedTime = jest.fn(() => MOCK_TIME_FORMATTED);
+
+        processor = new Process(utilsMock);
+    });
+
     it('should filter mentions and links from words', () => {
         const words = ["good", "@bad", "http://bad.ca", "good2"];
         const filtered = processor.filterWords(words);
@@ -50,79 +62,67 @@ describe('Process', () => {
     });
 
     it('should add new keys in a data object', () => {
-        // Use a mock utils object to mock the getTime function that is used by the processor
-        const timeMock = jest.fn().mockReturnValue(201710302350);
-        const processorMocked = new Process({ getTime: timeMock });
         const data = {};
         const words = ["Test", "sentence", "one."];
 
-        processorMocked.appendData(data, words);
+        processor.appendData(data, words);
 
         expect(data).toHaveProperty(
             "Test sentence", [{
                 word: "one.",
-                time: 201710302350
+                time: MOCK_TIME
             }]
         );
     });
 
     it('should append to existing keys in a data object', () => {
-        // Use a mock utils object to mock the getTime function that is used by the processor
-        const timeMock = jest.fn().mockReturnValue(201710302351);
-        const processorMocked = new Process({ getTime: timeMock });
         const data = {
             "Test sentence": [{
                 word: "one.",
-                time: 201710302350
+                time: MOCK_TIME
             }]
         };
         const words = ["Test", "sentence", "two."];
 
-        processorMocked.appendData(data, words);
+        processor.appendData(data, words);
 
         expect(data).toHaveProperty(
             "Test sentence", [{
                 word: "one.",
-                time: 201710302350
+                time: MOCK_TIME
             }, {
                 word: "two.",
-                time: 201710302351
+                time: MOCK_TIME
             }]
         );
     });
 
     it('should convert raw tweets into a data object', () => {
-        const utilsMock = new Util();
-        const processorMocked = new Process(utilsMock);
-
-        // Override getTime in utils
-        utilsMock.getTime = () => 201710302350;
-
         const tweets = [
             { text: "test sentence one. tEst sentence two"},
             { text: "Another sentence one." }
         ];
-        const data = processorMocked.processTweets(tweets);
+        const data = processor.processTweets(tweets);
 
         expect(data).toMatchObject({
             "Test sentence": [{
                 word: "one.",
-                time: 201710302350
+                time: MOCK_TIME
             }, {
                 word: "two.",
-                time: 201710302350
+                time: MOCK_TIME
             }],
             "sentence one.": [{
                 word: "Test",
-                time: 201710302350
+                time: MOCK_TIME
             }],
             "one. Test": [{
                 word: "sentence",
-                time: 201710302350
+                time: MOCK_TIME
             }],
             "Another sentence": [{
                 word: "one.",
-                time: 201710302350
+                time: MOCK_TIME
             }]
         });
     });
