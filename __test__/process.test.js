@@ -90,4 +90,40 @@ describe('Process', () => {
             }]
         );
     });
+
+    it('should convert raw tweets into a data object', () => {
+        const utilsMock = new Util();
+        const processorMocked = new Process(utilsMock);
+
+        // Override getTime in utils
+        utilsMock.getTime = () => 201710302350;
+
+        const tweets = [
+            { text: "test sentence one. tEst sentence two"},
+            { text: "Another sentence one." }
+        ];
+        const data = processorMocked.processTweets(tweets);
+
+        expect(data).toMatchObject({
+            "Test sentence": [{
+                word: "one.",
+                time: 201710302350
+            }, {
+                word: "two.",
+                time: 201710302350
+            }],
+            "sentence one.": [{
+                word: "Test",
+                time: 201710302350
+            }],
+            "one. Test": [{
+                word: "sentence",
+                time: 201710302350
+            }],
+            "Another sentence": [{
+                word: "one.",
+                time: 201710302350
+            }]
+        });
+    });
 });
