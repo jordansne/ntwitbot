@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const Process = require('../lib/process.js');
-const Util    = require('../lib/util.js');
+const Process = require('../../lib/process.js');
+const Util    = require('../../lib/util.js');
 let processor;
 
 const MOCK_TIME           = 201710302350;

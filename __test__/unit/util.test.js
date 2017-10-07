@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const Util = require('../lib/util.js');
+const Util = require('../../lib/util.js');
 const utils = new Util();
 
 describe('Util', () => {
