@@ -67,12 +67,12 @@ describe('Process', () => {
 
         processor.appendData(data, words);
 
-        expect(data).toHaveProperty(
-            "Test sentence", [{
+        expect(data).toMatchObject({
+            "Test sentence": [{
                 word: "one.",
                 time: MOCK_TIME
             }]
-        );
+        });
     });
 
     it('should append to existing keys in a data object', () => {
@@ -86,15 +86,15 @@ describe('Process', () => {
 
         processor.appendData(data, words);
 
-        expect(data).toHaveProperty(
-            "Test sentence", [{
+        expect(data).toMatchObject({
+            "Test sentence": [{
                 word: "one.",
                 time: MOCK_TIME
             }, {
                 word: "two.",
                 time: MOCK_TIME
             }]
-        );
+        });
     });
 
     it('should convert raw tweets into a data object', () => {
