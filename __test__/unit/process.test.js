@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const Process = require('../../lib/process.js');
-const Util    = require('../../lib/util.js');
-let processor;
+const Process   = require('../../lib/process.js');
+const Util      = require('../../lib/util.js');
+
+const processor = new Process(new Util());
 
 const MOCK_TIME           = 201710302350;
 const MOCK_TIME_FORMATTED = "10/30/2017 23:50:15";
@@ -26,11 +27,8 @@ const MOCK_TIME_FORMATTED = "10/30/2017 23:50:15";
 describe('Process', () => {
     beforeAll(() => {
         // Override time methods with time constants above
-        const utilsMock = new Util();
-        utilsMock.getTime = jest.fn(() => MOCK_TIME);
-        utilsMock.getFormattedTime = jest.fn(() => MOCK_TIME_FORMATTED);
-
-        processor = new Process(utilsMock);
+        processor.utils.getTime = jest.fn(() => MOCK_TIME);
+        processor.utils.getFormattedTime = jest.fn(() => MOCK_TIME_FORMATTED);
     });
 
     it('should filter mentions and links from words', () => {
@@ -99,7 +97,7 @@ describe('Process', () => {
 
     it('should convert raw tweets into a data object', () => {
         const tweets = [
-            { text: "test sentence one. tEst sentence two"},
+            { text: "test sentence one. tEst sentence two" },
             { text: "Another sentence one." }
         ];
         const data = processor.processTweets(tweets);
