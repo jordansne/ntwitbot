@@ -16,7 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*eslint no-unused-vars: "off" */
-
 const Main = require('./lib/main.js');
 const main = new Main();
+
+main.init().then(() => {
+    main.start();
+});
