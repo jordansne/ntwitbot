@@ -46,16 +46,16 @@ describe('Retrieve', () => {
 
             expect.assertions(2);
 
-            return retriever.retrieveMentions("3423232321").then((mentions) => {
+            return retriever.retrieveMentions('3423232321').then((mentions) => {
                 expect(mentions).toBeDefined();
-                expect(getMentionsSpy).toHaveBeenCalledWith({ since_id: "3423232321" });
+                expect(getMentionsSpy).toHaveBeenCalledWith({ since_id: '3423232321' });
             });
         });
     });
 
     describe('Tweet Retrievals', () => {
         it('should specify the correct request for tweets from new users', () => {
-            const users = { "4243675": 0, "4243655": 0 };
+            const users = { '4243675': 0, '4243655': 0 };
             const retrieveForNewSpy =
                 jest.spyOn(retriever, 'retrieveForNew').mockImplementation(() => Promise.resolve({}));
 
@@ -64,13 +64,13 @@ describe('Retrieve', () => {
             return retriever.retrieveTweets(users).then((tweets) => {
                 expect(tweets).toBeDefined();
                 expect(retrieveForNewSpy).toHaveBeenCalledTimes(2);
-                expect(retrieveForNewSpy).toHaveBeenCalledWith({ user_id: "4243675", trim_user: true });
-                expect(retrieveForNewSpy).toHaveBeenCalledWith({ user_id: "4243655", trim_user: true });
+                expect(retrieveForNewSpy).toHaveBeenCalledWith({ user_id: '4243675', trim_user: true });
+                expect(retrieveForNewSpy).toHaveBeenCalledWith({ user_id: '4243655', trim_user: true });
             });
         });
 
         it('should specify the correct request for tweets from existing users', () => {
-            const users = { "4243675": "2324145663412", "4243655": "54643414213123" };
+            const users = { '4243675': '2324145663412', '4243655': '54643414213123' };
             const retrieveForExistingSpy =
                 jest.spyOn(retriever, 'retrieveForExisting').mockImplementation(() => Promise.resolve({}));
 
@@ -80,14 +80,14 @@ describe('Retrieve', () => {
                 expect(tweets).toBeDefined();
                 expect(retrieveForExistingSpy).toHaveBeenCalledTimes(2);
                 expect(retrieveForExistingSpy).toHaveBeenCalledWith({
-                    user_id: "4243675",
-                    since_id: "2324145663412",
+                    user_id: '4243675',
+                    since_id: '2324145663412',
                     count: 200,
                     trim_user: true
                 });
                 expect(retrieveForExistingSpy).toHaveBeenCalledWith({
-                    user_id: "4243655",
-                    since_id: "54643414213123",
+                    user_id: '4243655',
+                    since_id: '54643414213123',
                     count: 200,
                     trim_user: true
                 });

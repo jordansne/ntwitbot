@@ -1,0 +1,27 @@
+{
+    "env": {
+        "es6": true,
+        "node": true,
+        "commonjs": true,
+        "jest": true
+    },
+    "plugins": [
+        "node"
+    ],
+    "extends": "eslint:recommended",
+    "rules": {
+        "indent": "off",
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "warn",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ]
+    }
+}

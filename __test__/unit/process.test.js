@@ -22,7 +22,7 @@ const Util      = require('../../lib/util.js');
 const processor = new Process(new Util());
 
 const MOCK_TIME           = 201710302350;
-const MOCK_TIME_FORMATTED = "10/30/2017 23:50:15";
+const MOCK_TIME_FORMATTED = '10/30/2017 23:50:15';
 
 describe('Process', () => {
     beforeAll(() => {
@@ -32,42 +32,42 @@ describe('Process', () => {
     });
 
     it('should filter mentions and links from words', () => {
-        const words = ["good", "@bad", "http://bad.ca", "good2"];
+        const words = ['good', '@bad', 'http://bad.ca', 'good2'];
         const filtered = processor.filterWords(words);
 
-        expect(filtered).toMatchObject(["good", "good2"]);
+        expect(filtered).toMatchObject(['good', 'good2']);
     });
 
     it('should convert words to lowercase', () => {
-        const words = ["Test", "sentENCE."];
+        const words = ['Test', 'sentENCE.'];
         processor.converToLowercase(words);
 
-        expect(words).toMatchObject(["test", "sentence."]);
+        expect(words).toMatchObject(['test', 'sentence.']);
     });
 
     it('should capitalize sentences', () => {
-        const words = ["test", "one.", "test", "two!", "test", "three?", "final"];
+        const words = ['test', 'one.', 'test', 'two!', 'test', 'three?', 'final'];
         processor.capitalizeSentences(words);
 
-        expect(words).toMatchObject(["Test", "one.", "Test", "two!", "Test", "three?", "Final"]);
+        expect(words).toMatchObject(['Test', 'one.', 'Test', 'two!', 'Test', 'three?', 'Final']);
     });
 
     it('should append periods to the end of tweets', () => {
-        const words = ["Test", "sentence"];
+        const words = ['Test', 'sentence'];
         processor.appendPeriod(words);
 
-        expect(words).toMatchObject(["Test", "sentence."]);
+        expect(words).toMatchObject(['Test', 'sentence.']);
     });
 
     it('should add new keys in a data object', () => {
         const data = {};
-        const words = ["Test", "sentence", "one."];
+        const words = ['Test', 'sentence', 'one.'];
 
         processor.appendData(data, words);
 
         expect(data).toMatchObject({
-            "Test sentence": [{
-                word: "one.",
+            'Test sentence': [{
+                word: 'one.',
                 time: MOCK_TIME
             }]
         });
@@ -75,21 +75,21 @@ describe('Process', () => {
 
     it('should append to existing keys in a data object', () => {
         const data = {
-            "Test sentence": [{
-                word: "one.",
+            'Test sentence': [{
+                word: 'one.',
                 time: MOCK_TIME
             }]
         };
-        const words = ["Test", "sentence", "two."];
+        const words = ['Test', 'sentence', 'two.'];
 
         processor.appendData(data, words);
 
         expect(data).toMatchObject({
-            "Test sentence": [{
-                word: "one.",
+            'Test sentence': [{
+                word: 'one.',
                 time: MOCK_TIME
             }, {
-                word: "two.",
+                word: 'two.',
                 time: MOCK_TIME
             }]
         });
@@ -97,29 +97,29 @@ describe('Process', () => {
 
     it('should convert raw tweets into a data object', () => {
         const tweets = [
-            { text: "test sentence one. tEst sentence two" },
-            { text: "Another sentence one." }
+            { text: 'test sentence one. tEst sentence two' },
+            { text: 'Another sentence one.' }
         ];
         const data = processor.processTweets(tweets);
 
         expect(data).toMatchObject({
-            "Test sentence": [{
-                word: "one.",
+            'Test sentence': [{
+                word: 'one.',
                 time: MOCK_TIME
             }, {
-                word: "two.",
+                word: 'two.',
                 time: MOCK_TIME
             }],
-            "sentence one.": [{
-                word: "Test",
+            'sentence one.': [{
+                word: 'Test',
                 time: MOCK_TIME
             }],
-            "one. Test": [{
-                word: "sentence",
+            'one. Test': [{
+                word: 'sentence',
                 time: MOCK_TIME
             }],
-            "Another sentence": [{
-                word: "one.",
+            'Another sentence': [{
+                word: 'one.',
                 time: MOCK_TIME
             }]
         });

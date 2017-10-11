@@ -54,9 +54,9 @@ describe('Util', () => {
     });
 
     it('should check for ending punctuation', () => {
-        expect(utils.endsWithPunc("This is a test.")).toBe(true);
-        expect(utils.endsWithPunc("This is a test!")).toBe(true);
-        expect(utils.endsWithPunc("This is a test?")).toBe(true);
-        expect(utils.endsWithPunc("This is a test")).toBe(false);
+        expect(utils.endsWithPunc('This is a test.')).toBe(true);
+        expect(utils.endsWithPunc('This is a test!')).toBe(true);
+        expect(utils.endsWithPunc('This is a test?')).toBe(true);
+        expect(utils.endsWithPunc('This is a test')).toBe(false);
     });
 });
