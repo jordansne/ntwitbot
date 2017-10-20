@@ -43,14 +43,26 @@ describe('Util', () => {
         expect(utils.isInArray(array2, someObject)).toBe(false);
     });
 
-    it('should generate arrays', () => {
-        const array = utils.generateShuffledArray(4);
+    it('should generate shuffled arrays', () => {
+        const shuffleMock = jest.spyOn(utils, 'shuffleArray');
 
-        expect(array).toHaveLength(4);
-        expect(array).toContain(0);
+        expect.assertions(2);
+        shuffleMock.mockImplementationOnce((array) => {
+            expect(array).toEqual([ 0, 1, 2, 3 ]);
+            return [2, 0, 1, 3];
+        });
+        expect(utils.generateShuffledArray(4)).toEqual([ 2, 0, 1, 3 ]);
+
+        shuffleMock.mockRestore();
+    });
+
+    it('should not change any elements when shuffling an array', () => {
+        const array = utils.shuffleArray([ 1, 3, 5 ]);
+
+        expect(array).toHaveLength(3);
         expect(array).toContain(1);
-        expect(array).toContain(2);
         expect(array).toContain(3);
+        expect(array).toContain(5);
     });
 
     it('should check for ending punctuation', () => {
