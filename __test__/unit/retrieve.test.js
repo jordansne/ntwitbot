@@ -20,19 +20,20 @@ const Retrieve  = require('../../lib/retrieve.js');
 const Twitter   = require('../../lib/twitter.js');
 const Util      = require('../../lib/util.js');
 
-const retriever = new Retrieve(new Twitter(), new Util());
+const utils = new Util();
+const retriever = new Retrieve(new Twitter({}, utils), utils);
 
 describe('Retrieve', () => {
-    afterEach(() => {
-        jest.restoreAllMocks();
-    });
 
     describe('Mention Retrievals', () => {
-        it('should retrieve all mentions of the user', () => {
-            const getMentionsSpy =
-                jest.spyOn(retriever.twitterHandler, 'getMentions').mockImplementation(() => Promise.resolve({}));
+        const getMentionsSpy = jest.spyOn(retriever.twitterHandler, 'getMentions');
 
-            expect.assertions(2);
+        afterEach(() => {
+            getMentionsSpy.mockReset();
+        });
+
+        it('should retrieve all mentions of the user', () => {
+            getMentionsSpy.mockImplementation(() => Promise.resolve({}));
 
             return retriever.retrieveMentions(0).then((mentions) => {
                 expect(mentions).toBeDefined();
@@ -41,57 +42,80 @@ describe('Retrieve', () => {
         });
 
         it('should retrieve all mentions since a specified ID of the user', () => {
-            const getMentionsSpy =
-                jest.spyOn(retriever.twitterHandler, 'getMentions').mockImplementation(() => Promise.resolve({}));
+            getMentionsSpy.mockImplementation(() => Promise.resolve({}));
 
-            expect.assertions(2);
-
-            return retriever.retrieveMentions('3423232321').then((mentions) => {
+            return retriever.retrieveMentions('5001').then((mentions) => {
                 expect(mentions).toBeDefined();
-                expect(getMentionsSpy).toHaveBeenCalledWith({ since_id: '3423232321' });
+                expect(getMentionsSpy).toHaveBeenCalledWith({ since_id: '5001' });
             });
         });
     });
 
     describe('Tweet Retrievals', () => {
-        it('should specify the correct request for tweets from new users', () => {
-            const users = { '4243675': 0, '4243655': 0 };
-            const retrieveForNewSpy =
-                jest.spyOn(retriever, 'retrieveForNew').mockImplementation(() => Promise.resolve({}));
 
-            expect.assertions(4);
+        describe('Existing Users', () => {
+            let retrieveForExistingSpy;
 
-            return retriever.retrieveTweets(users).then((tweets) => {
-                expect(tweets).toBeDefined();
-                expect(retrieveForNewSpy).toHaveBeenCalledTimes(2);
-                expect(retrieveForNewSpy).toHaveBeenCalledWith({ user_id: '4243675', trim_user: true });
-                expect(retrieveForNewSpy).toHaveBeenCalledWith({ user_id: '4243655', trim_user: true });
+            beforeEach(() => {
+                retrieveForExistingSpy = jest.spyOn(retriever, 'retrieveForExisting');
             });
-        });
 
-        it('should specify the correct request for tweets from existing users', () => {
-            const users = { '4243675': '2324145663412', '4243655': '54643414213123' };
-            const retrieveForExistingSpy =
-                jest.spyOn(retriever, 'retrieveForExisting').mockImplementation(() => Promise.resolve({}));
+            afterEach(() => {
+                retrieveForExistingSpy.mockRestore();
+            });
 
-            expect.assertions(4);
+            it('should specify the correct parameters for a retrieval', () => {
+                const users = { '001': '5001', '002': '5002' };
+                retrieveForExistingSpy.mockImplementation(() => Promise.resolve({}));
 
-            return retriever.retrieveTweets(users).then((tweets) => {
-                expect(tweets).toBeDefined();
-                expect(retrieveForExistingSpy).toHaveBeenCalledTimes(2);
-                expect(retrieveForExistingSpy).toHaveBeenCalledWith({
-                    user_id: '4243675',
-                    since_id: '2324145663412',
-                    count: 200,
-                    trim_user: true
-                });
-                expect(retrieveForExistingSpy).toHaveBeenCalledWith({
-                    user_id: '4243655',
-                    since_id: '54643414213123',
-                    count: 200,
-                    trim_user: true
+                return retriever.retrieveTweets(users).then((tweets) => {
+                    expect(tweets).toEqual([ {}, {} ]);
+                    expect(retrieveForExistingSpy).toHaveBeenCalledTimes(2);
+                    expect(retrieveForExistingSpy).toHaveBeenCalledWith({
+                        user_id: '001',
+                        since_id: '5001',
+                        count: 200,
+                        trim_user: true
+                    });
+                    expect(retrieveForExistingSpy).toHaveBeenCalledWith({
+                        user_id: '002',
+                        since_id: '5002',
+                        count: 200,
+                        trim_user: true
+                    });
                 });
             });
         });
+
+        describe('New Users', () => {
+            let retrieveForNewSpy;
+
+            beforeEach(() => {
+                retrieveForNewSpy = jest.spyOn(retriever, 'retrieveForNew');
+            });
+
+            afterEach(() => {
+                retrieveForNewSpy.mockRestore();
+            });
+
+            it('should specify the correct parameters for a retrieval', () => {
+                const users = { '001': 0, '002': 0 };
+                retrieveForNewSpy.mockImplementation(() => Promise.resolve({}));
+
+                return retriever.retrieveTweets(users).then((tweets) => {
+                    expect(tweets).toEqual([ {}, {} ]);
+                    expect(retrieveForNewSpy).toHaveBeenCalledTimes(2);
+                    expect(retrieveForNewSpy).toHaveBeenCalledWith({
+                        user_id: '001',
+                        trim_user: true
+                    });
+                    expect(retrieveForNewSpy).toHaveBeenCalledWith({
+                        user_id: '002',
+                        trim_user: true
+                    });
+                });
+            });
+        });
+
     });
 });
