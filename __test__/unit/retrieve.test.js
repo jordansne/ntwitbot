@@ -126,6 +126,54 @@ describe('Retrieve', () => {
                     });
                 });
             });
+
+            describe('when receivable tweets > 200', () => {
+                it('should properly make Twitter API requests', () => {
+                    const users = { '001': '5001' };
+                    const mockTweets = tweetBuilder.generateRandomTweets(220);
+                    getTweetsSpy
+                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 200)))
+                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(199, 210)))
+                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(209, 210)));
+
+                    return retriever.retrieveTweets(users).then(() => {
+                        expect(getTweetsSpy).toHaveBeenCalledTimes(3);
+                        expect(getTweetsSpy).toHaveBeenCalledWith({
+                            user_id: '001',
+                            since_id: '5001',
+                            trim_user: true,
+                            count: 200
+                        });
+                        expect(getTweetsSpy).toHaveBeenCalledWith({
+                            user_id: '001',
+                            since_id: '5001',
+                            trim_user: true,
+                            count: 200,
+                            max_id: mockTweets[199].id_str
+                        });
+                        expect(getTweetsSpy).toHaveBeenCalledWith({
+                            user_id: '001',
+                            since_id: '5001',
+                            trim_user: true,
+                            count: 200,
+                            max_id: mockTweets[209].id_str
+                        });
+                    });
+                });
+
+                it('should return the correct tweets', () => {
+                    const users = { '001': '5001' };
+                    const mockTweets = tweetBuilder.generateRandomTweets(210);
+                    getTweetsSpy
+                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 200)))
+                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(199, 210)))
+                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(209, 210)));
+
+                    return retriever.retrieveTweets(users).then((tweets) => {
+                        expect(tweets).toEqual([ mockTweets ]);
+                    });
+                });
+            });
         });
 
         describe('New Users', () => {
@@ -191,6 +239,53 @@ describe('Retrieve', () => {
                     getTweetsSpy
                         .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 5)))
                         .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(4, 5)));
+
+                    return retriever.retrieveTweets(users).then((tweets) => {
+                        expect(tweets).toEqual([ mockTweets ]);
+                    });
+                });
+            });
+
+            describe('when receivable tweets > 200', () => {
+                it('should properly make Twitter API requests when tracked tweets > receivable tweets', () => {
+                    const users = { '001': 0 };
+                    const mockTweets = tweetBuilder.generateRandomTweets(210);
+                    retriever.TWEETS_TO_TRACK = 500;
+                    getTweetsSpy
+                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 200)))
+                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(199, 210)))
+                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(209, 210)));
+
+                    return retriever.retrieveTweets(users).then(() => {
+                        expect(getTweetsSpy).toHaveBeenCalledTimes(3);
+                        expect(getTweetsSpy).toHaveBeenCalledWith({
+                            user_id: '001',
+                            trim_user: true,
+                            count: 200
+                        });
+                        expect(getTweetsSpy).toHaveBeenCalledWith({
+                            user_id: '001',
+                            trim_user: true,
+                            count: 200,
+                            max_id: mockTweets[199].id_str
+                        });
+                        expect(getTweetsSpy).toHaveBeenCalledWith({
+                            user_id: '001',
+                            trim_user: true,
+                            count: 200,
+                            max_id: mockTweets[209].id_str
+                        });
+                    });
+                });
+
+                it('should return the correct tweets when tracked tweets > receivable tweets', () => {
+                    const users = { '001': 0 };
+                    const mockTweets = tweetBuilder.generateRandomTweets(210);
+                    retriever.TWEETS_TO_TRACK = 500;
+                    getTweetsSpy
+                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 200)))
+                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(199, 210)))
+                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(209, 210)));
 
                     return retriever.retrieveTweets(users).then((tweets) => {
                         expect(tweets).toEqual([ mockTweets ]);
