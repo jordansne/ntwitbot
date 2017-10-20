@@ -19,6 +19,7 @@
 const Retrieve  = require('../../lib/retrieve.js');
 const Twitter   = require('../../lib/twitter.js');
 const Util      = require('../../lib/util.js');
+const tweetBuilder = require('../builders/tweetbuilder.js');
 
 const utils = new Util();
 const retriever = new Retrieve(new Twitter({}, utils), utils);
@@ -54,14 +55,16 @@ describe('Retrieve', () => {
     describe('Tweet Retrievals', () => {
 
         describe('Existing Users', () => {
-            let retrieveForExistingSpy;
+            let retrieveForExistingSpy, getTweetsSpy;
 
             beforeEach(() => {
                 retrieveForExistingSpy = jest.spyOn(retriever, 'retrieveForExisting');
+                getTweetsSpy = jest.spyOn(retriever.twitterHandler, 'getTweets');
             });
 
             afterEach(() => {
                 retrieveForExistingSpy.mockRestore();
+                getTweetsSpy.mockRestore();
             });
 
             it('should specify the correct parameters for a retrieval', () => {
@@ -85,17 +88,56 @@ describe('Retrieve', () => {
                     });
                 });
             });
+
+            it('should properly make Twitter requests when the total tweets is < 200', () => {
+                const users = { '001': '5001' };
+                const mockTweets = tweetBuilder.generateRandomTweets(5);
+                getTweetsSpy
+                    .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 5)))
+                    .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(4, 5)));
+
+                return retriever.retrieveTweets(users).then(() => {
+                    expect(getTweetsSpy).toHaveBeenCalledTimes(2);
+                    expect(getTweetsSpy).toHaveBeenCalledWith({
+                        user_id: '001',
+                        since_id: '5001',
+                        trim_user: true,
+                        count: 200
+                    });
+                    expect(getTweetsSpy).toHaveBeenCalledWith({
+                        user_id: '001',
+                        since_id: '5001',
+                        trim_user: true,
+                        count: 200,
+                        max_id: mockTweets[4].id_str
+                    });
+                });
+            });
+
+            it('should return the tweets from all retrievals when the total tweets is < 200', () => {
+                const users = { '001': '5001' };
+                const mockTweets = tweetBuilder.generateRandomTweets(5);
+                getTweetsSpy
+                    .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 5)))
+                    .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(4, 5)));
+
+                return retriever.retrieveTweets(users).then((tweets) => {
+                    expect(tweets).toEqual([ mockTweets ]);
+                });
+            });
         });
 
         describe('New Users', () => {
-            let retrieveForNewSpy;
+            let retrieveForNewSpy, getTweetsSpy;
 
             beforeEach(() => {
                 retrieveForNewSpy = jest.spyOn(retriever, 'retrieveForNew');
+                getTweetsSpy = jest.spyOn(retriever.twitterHandler, 'getTweets');
             });
 
             afterEach(() => {
                 retrieveForNewSpy.mockRestore();
+                getTweetsSpy.mockRestore();
             });
 
             it('should specify the correct parameters for a retrieval', () => {
@@ -113,6 +155,41 @@ describe('Retrieve', () => {
                         user_id: '002',
                         trim_user: true
                     });
+                });
+            });
+
+            it('should properly make Twitter requests when the total tweets is < 200', () => {
+                const users = { '001': 0 };
+                const mockTweets = tweetBuilder.generateRandomTweets(5);
+                getTweetsSpy
+                    .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 5)))
+                    .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(4, 5)));
+
+                return retriever.retrieveTweets(users).then(() => {
+                    expect(getTweetsSpy).toHaveBeenCalledTimes(2);
+                    expect(getTweetsSpy).toHaveBeenCalledWith({
+                        user_id: '001',
+                        trim_user: true,
+                        count: 200
+                    });
+                    expect(getTweetsSpy).toHaveBeenCalledWith({
+                        user_id: '001',
+                        trim_user: true,
+                        count: 200,
+                        max_id: mockTweets[4].id_str
+                    });
+                });
+            });
+
+            it('should return the tweets from all retrievals when the total tweets is < 200', () => {
+                const users = { '001': 0 };
+                const mockTweets = tweetBuilder.generateRandomTweets(5);
+                getTweetsSpy
+                    .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 5)))
+                    .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(4, 5)));
+
+                return retriever.retrieveTweets(users).then((tweets) => {
+                    expect(tweets).toEqual([ mockTweets ]);
                 });
             });
         });
