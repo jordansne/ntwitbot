@@ -246,6 +246,37 @@ describe('Retrieve', () => {
                         });
                     });
                 });
+
+                describe('when tracked tweets < receivable tweets', () => {
+                    it('should properly make Twitter API requests', () => {
+                        const users = { '001': 0 };
+                        const mockTweets = tweetBuilder.generateRandomTweets(10);
+                        retriever.TWEETS_TO_TRACK = 5;
+                        getTweetsSpy
+                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 10)));
+
+                        return retriever.retrieveTweets(users).then(() => {
+                            expect(getTweetsSpy).toHaveBeenCalledTimes(1);
+                            expect(getTweetsSpy).toHaveBeenCalledWith({
+                                user_id: '001',
+                                trim_user: true,
+                                count: 200
+                            });
+                        });
+                    });
+
+                    it('should return the correct tweets', () => {
+                        const users = { '001': 0 };
+                        const mockTweets = tweetBuilder.generateRandomTweets(10);
+                        retriever.TWEETS_TO_TRACK = 5;
+                        getTweetsSpy
+                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 10)));
+
+                        return retriever.retrieveTweets(users).then((tweets) => {
+                            expect(tweets).toEqual([ mockTweets.slice(0, 5) ]);
+                        });
+                    });
+                });
             });
 
             describe('when receivable tweets > 200', () => {
@@ -292,6 +323,45 @@ describe('Retrieve', () => {
 
                         return retriever.retrieveTweets(users).then((tweets) => {
                             expect(tweets).toEqual([ mockTweets ]);
+                        });
+                    });
+                });
+
+                describe('when tracked tweets < receivable tweets', () => {
+                    it('should properly make Twitter API requests', () => {
+                        const users = { '001': 0 };
+                        const mockTweets = tweetBuilder.generateRandomTweets(220);
+                        retriever.TWEETS_TO_TRACK = 210;
+                        getTweetsSpy
+                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 200)))
+                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(199, 220)));
+
+                        return retriever.retrieveTweets(users).then(() => {
+                            expect(getTweetsSpy).toHaveBeenCalledTimes(2);
+                            expect(getTweetsSpy).toHaveBeenCalledWith({
+                                user_id: '001',
+                                trim_user: true,
+                                count: 200
+                            });
+                            expect(getTweetsSpy).toHaveBeenCalledWith({
+                                user_id: '001',
+                                trim_user: true,
+                                count: 200,
+                                max_id: mockTweets[199].id_str
+                            });
+                        });
+                    });
+
+                    it('should return the correct tweets', () => {
+                        const users = { '001': 0 };
+                        const mockTweets = tweetBuilder.generateRandomTweets(220);
+                        retriever.TWEETS_TO_TRACK = 210;
+                        getTweetsSpy
+                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 200)))
+                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(199, 220)));
+
+                        return retriever.retrieveTweets(users).then((tweets) => {
+                            expect(tweets).toEqual([ mockTweets.slice(0, 210)] );
                         });
                     });
                 });
