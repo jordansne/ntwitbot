@@ -71,4 +71,40 @@ describe('Util', () => {
         expect(utils.endsWithPunc('This is a test?')).toBe(true);
         expect(utils.endsWithPunc('This is a test')).toBe(false);
     });
+
+    describe('Date', () => {
+        const Date_ = Date;
+
+        afterAll(() => {
+            global.Date = Date_;
+        });
+
+        describe('when the date has single digit time & date numbers', () => {
+            beforeAll(() => {
+                global.Date = jest.fn(() => new Date_(2016, 5, 3, 8, 1, 4));
+            });
+
+            it('should generate the proper int representation', () => {
+                expect(utils.getTime()).toBe(201606030801);
+            });
+
+            it('should generate the proper string representation', () => {
+                expect(utils.getFormattedTime()).toBe('06/03/2016 08:01:04');
+            });
+        });
+
+        describe('when the date has double digit time & date numbers', () => {
+            beforeAll(() => {
+                global.Date = jest.fn(() => new Date_(2016, 10, 23, 13, 54, 23));
+            });
+
+            it('should generate the proper int representation', () => {
+                expect(utils.getTime()).toBe(201611231354);
+            });
+
+            it('should generate the proper string representation', () => {
+                expect(utils.getFormattedTime()).toBe('11/23/2016 13:54:23');
+            });
+        });
+    });
 });
