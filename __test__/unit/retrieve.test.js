@@ -88,6 +88,22 @@ describe('Retrieve', () => {
                 });
             });
 
+            it('should handle no new tweets correctly', () => {
+                const users = { '001': '5001' };
+                getTweetsSpy.mockImplementation(() => Promise.resolve([]));
+
+                return retriever.retrieveTweets(users).then((tweets) => {
+                    expect(tweets).toEqual([ [] ]);
+                    expect(getTweetsSpy).toHaveBeenCalledTimes(1);
+                    expect(getTweetsSpy).toHaveBeenCalledWith({
+                        user_id: '001',
+                        since_id: '5001',
+                        trim_user: true,
+                        count: 200
+                    });
+                });
+            });
+
             describe('when receivable tweets < 200', () => {
                 it('should properly make Twitter API requests', () => {
                     const users = { '001': '5001' };
