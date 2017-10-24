@@ -1,11 +1,21 @@
-config/secret.json
-config/secret.js
-config/setup.json
-config/setup.js
-data/*
+### Node Files ###
 node_modules/
+.npm
 logs
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+### Project ###
+build/
 .tern-project
+
+### App ###
+config/*
+!config/secret.js.sample
+!config/setup.js.sample
+data/
+
+### Misc ###
 *.DS_STORE
