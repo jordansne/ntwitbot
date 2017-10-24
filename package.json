@@ -26,5 +26,9 @@
   },
   "bugs": {
     "url": "https://github.com/jordansne/ntwitbot/issues"
+  },
+  "jest": {
+      "coverageDirectory": "build/coverage",
+      "collectCoverageFrom" : [ "lib/**/*.js" ]
   }
 }
