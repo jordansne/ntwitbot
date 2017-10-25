@@ -48,6 +48,51 @@ describe('Generate', () => {
         expect(generator.getRandomWords(wordDB, 'This is')).toEqual([ 'two' ]);
     });
 
+    describe('Tweet Generation', () => {
+        let getPossibleMovesMock;
+
+        beforeEach(() => {
+            getPossibleMovesMock = jest.spyOn(generator, 'getPossibleMoves');
+        });
+
+        afterEach(() => {
+            getPossibleMovesMock.mockRestore();
+        });
+
+        it('should properly handle finishing with a word', () => {
+            getPossibleMovesMock.mockImplementationOnce(() => ['FINISH_WITH:good.']);
+            const wordDB = {
+                'This is': [{ word: 'good.' }]
+            };
+
+            expect(generator.generateTweet(wordDB)).toBe('This is good.');
+            expect(getPossibleMovesMock).toHaveBeenCalledTimes(1);
+        });
+
+        it('should properly handle adding a word', () => {
+            getPossibleMovesMock.mockImplementationOnce(() => ['ADD_WORD:a']);
+            const wordDB = {
+                'This is': [{ word: 'a' }],
+                'is a': [{ word: 'test.' }]
+            };
+
+            expect(generator.generateTweet(wordDB)).toBe('This is a test.');
+            expect(getPossibleMovesMock).toHaveBeenCalledTimes(2);
+        });
+
+        it('should properly handle popping a word', () => {
+            getPossibleMovesMock
+                .mockImplementationOnce(() => ['ADD_WORD:a'])
+                .mockImplementationOnce(() => ['POP_WORD:']);
+            const wordDB = {
+                'This is': [{ word: 'a' }, { word: 'good.' }]
+            };
+
+            expect(generator.generateTweet(wordDB)).toBe('This is good.');
+            expect(getPossibleMovesMock).toHaveBeenCalledTimes(3);
+        });
+    });
+
     describe('Getting Possible Moves for generation', () => {
         it('should add the move to finish with a word that ends in punctuation', () => {
             const wordStack = ['This', 'is', 'a'];
