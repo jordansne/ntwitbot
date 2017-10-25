@@ -40,30 +40,54 @@ describe('Generate', () => {
         expect(firstWords).toContain('First two');
     });
 
-    describe('Getting Random Words from the Database', () => {
-        it('should return a word for a key that hasn\'t been popped', () => {
+    it('should only return random words that haven\'t been popped', () => {
+        const wordDB = {
+            'This is': [{ word: 'one', beenPopped: true }, { word: 'two' }]
+        };
+
+        expect(generator.getRandomWords(wordDB, 'This is')).toEqual([ 'two' ]);
+    });
+
+    describe('Getting Possible Moves for generation', () => {
+        it('should add the move to finish with a word that ends in punctuation', () => {
+            const wordStack = ['This', 'is', 'a'];
             const wordDB = {
-                'test message': [{
-                    word: 'one',
-                    beenPopped: true
-                }, {
-                    word: 'two'
-                }]
+                'This is': [{ word: 'a' }],
+                'is a': [{ word: 'test.' }]
             };
 
-            expect(generator.getRandomWord(wordDB, 'test message')).toBe('two');
+            expect(generator.getPossibleMoves(wordDB, wordStack)).toEqual([ 'FINISH_WITH:test.' ]);
         });
 
-        it('should return null when all words have been popped for a key', () => {
+        it('should add the move to add a word that doesn\'t end in punctuation', () => {
+            const wordStack = ['This', 'is', 'a'];
             const wordDB = {
-                'test message': [{
-                    word: 'one',
-                    beenPopped: true
-                }]
+                'This is': [{ word: 'a' }],
+                'is a': [{ word: 'test' }]
             };
 
-            expect(generator.getRandomWord(wordDB, 'test message')).toBeNull();
+            expect(generator.getPossibleMoves(wordDB, wordStack)).toEqual([ 'ADD_WORD:test' ]);
         });
+
+        it('should add the move to pop a word if all next words have been popped', () => {
+            const wordStack = ['This', 'is', 'a'];
+            const wordDB = {
+                'This is': [{ word: 'a' }],
+                'is a': [{ word: 'test', beenPopped: true }]
+            };
+
+            expect(generator.getPossibleMoves(wordDB, wordStack)).toEqual([ 'POP_WORD:' ]);
+        });
+
+        it('should add the move to pop a word if there is no next words', () => {
+            const wordStack = ['This', 'is', 'bad'];
+            const wordDB = {
+                'This is': [{ word: 'bad' }],
+            };
+
+            expect(generator.getPossibleMoves(wordDB, wordStack)).toEqual([ 'POP_WORD:' ]);
+        });
+
     });
 
     describe('Word Stack Compiling', () => {
