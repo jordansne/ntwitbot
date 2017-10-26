@@ -1,11 +1,16 @@
 language: node_js
 node_js:
   - "node"
+test:
+  - "npm run test-ci"
 before_script:
   - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter;
-        chmod +x ./cc-test-reporter;
-        ./cc-test-reporter before-build;
+      curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./build/cc-test-reporter;
+      chmod +x ./build/cc-test-reporter;
+      ./build/cc-test-reporter before-build;
     fi
 after_script:
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+      cd ./build;
+      ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT;
+    fi

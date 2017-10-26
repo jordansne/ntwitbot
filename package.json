@@ -18,7 +18,8 @@
   },
   "scripts": {
     "start": "node --use-strict index.js",
-    "test": "jest"
+    "test": "jest",
+    "test-ci": "jest --coverage"
   },
   "repository": {
     "type": "git",
