@@ -84,6 +84,13 @@ describe('Generate', () => {
             expect(generator.generateTweet(wordDB)).toBe('This is good.');
             expect(getPossibleMovesMock).toHaveBeenCalledTimes(3);
         });
+
+        it('should return null if there are no possibilities available', () => {
+            const wordDB = { 'This is': [{ word: 'a' }] };
+
+            expect(generator.generateTweet(wordDB)).toBeNull();
+            expect(getPossibleMovesMock).toHaveBeenCalledTimes(4);
+        });
     });
 
     describe('Getting Possible Moves for generation', () => {
@@ -124,6 +131,9 @@ describe('Generate', () => {
             expect(generator.getPossibleMoves(wordDB, wordStack)).toEqual([ 'POP_WORD:' ]);
         });
 
+        it('should not add any moves if the word stack is empty', () => {
+            expect(generator.getPossibleMoves({}, [])).toEqual([]);
+        });
     });
 
     describe('Word Stack Compiling', () => {
