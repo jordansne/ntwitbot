@@ -25,28 +25,33 @@ const utils = new Util();
 const retriever = new Retrieve(new Twitter({}, utils), utils);
 
 describe('Retrieve', () => {
-
     describe('Mention Retrievals', () => {
-        const getMentionsSpy = jest.spyOn(retriever.twitterHandler, 'getMentions');
+        let getMentionsSpy;
+
+        beforeEach(() => {
+            getMentionsSpy = jest.spyOn(retriever.twitterHandler, 'getMentions');
+        });
 
         afterEach(() => {
-            getMentionsSpy.mockReset();
+            getMentionsSpy.mockRestore();
         });
 
         it('should retrieve all mentions of the user', () => {
-            getMentionsSpy.mockImplementation(() => Promise.resolve({}));
+            getMentionsSpy.mockReturnValueOnce(Promise.resolve([ 'mention1' ]));
 
+            expect.assertions(2);
             return retriever.retrieveMentions(0).then((mentions) => {
-                expect(mentions).toBeDefined();
+                expect(mentions).toEqual([ 'mention1' ]);
                 expect(getMentionsSpy).toHaveBeenCalledWith({ count: 200 });
             });
         });
 
         it('should retrieve all mentions since a specified ID of the user', () => {
-            getMentionsSpy.mockImplementation(() => Promise.resolve({}));
+            getMentionsSpy.mockReturnValueOnce(Promise.resolve([ 'mention1' ]));
 
+            expect.assertions(2);
             return retriever.retrieveMentions('5001').then((mentions) => {
-                expect(mentions).toBeDefined();
+                expect(mentions).toEqual([ 'mention1' ]);
                 expect(getMentionsSpy).toHaveBeenCalledWith({ since_id: '5001' });
             });
         });
@@ -68,10 +73,10 @@ describe('Retrieve', () => {
 
             it('should specify the correct parameters for a retrieval', () => {
                 const users = { '001': '5001', '002': '5002' };
-                retrieveForExistingSpy.mockImplementation(() => Promise.resolve({}));
+                retrieveForExistingSpy.mockReturnValue(Promise.resolve([]));
 
-                return retriever.retrieveTweets(users).then((tweets) => {
-                    expect(tweets).toEqual([ {}, {} ]);
+                expect.assertions(3);
+                return retriever.retrieveTweets(users).then(() => {
                     expect(retrieveForExistingSpy).toHaveBeenCalledTimes(2);
                     expect(retrieveForExistingSpy).toHaveBeenCalledWith({
                         user_id: '001',
@@ -90,8 +95,9 @@ describe('Retrieve', () => {
 
             it('should handle no new tweets correctly', () => {
                 const users = { '001': '5001' };
-                getTweetsSpy.mockImplementation(() => Promise.resolve([]));
+                getTweetsSpy.mockReturnValue(Promise.resolve([]));
 
+                expect.assertions(3);
                 return retriever.retrieveTweets(users).then((tweets) => {
                     expect(tweets).toEqual([ [] ]);
                     expect(getTweetsSpy).toHaveBeenCalledTimes(1);
@@ -109,9 +115,10 @@ describe('Retrieve', () => {
                     const users = { '001': '5001' };
                     const mockTweets = tweetBuilder.generateRandomTweets(5);
                     getTweetsSpy
-                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 5)))
-                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(4, 5)));
+                        .mockReturnValueOnce(Promise.resolve(mockTweets.slice(0, 5)))
+                        .mockReturnValueOnce(Promise.resolve(mockTweets.slice(4, 5)));
 
+                    expect.assertions(3);
                     return retriever.retrieveTweets(users).then(() => {
                         expect(getTweetsSpy).toHaveBeenCalledTimes(2);
                         expect(getTweetsSpy).toHaveBeenCalledWith({
@@ -134,9 +141,10 @@ describe('Retrieve', () => {
                     const users = { '001': '5001' };
                     const mockTweets = tweetBuilder.generateRandomTweets(5);
                     getTweetsSpy
-                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 5)))
-                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(4, 5)));
+                        .mockReturnValueOnce(Promise.resolve(mockTweets.slice(0, 5)))
+                        .mockReturnValueOnce(Promise.resolve(mockTweets.slice(4, 5)));
 
+                    expect.assertions(1);
                     return retriever.retrieveTweets(users).then((tweets) => {
                         expect(tweets).toEqual([ mockTweets ]);
                     });
@@ -148,10 +156,11 @@ describe('Retrieve', () => {
                     const users = { '001': '5001' };
                     const mockTweets = tweetBuilder.generateRandomTweets(220);
                     getTweetsSpy
-                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 200)))
-                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(199, 210)))
-                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(209, 210)));
+                        .mockReturnValueOnce(Promise.resolve(mockTweets.slice(0, 200)))
+                        .mockReturnValueOnce(Promise.resolve(mockTweets.slice(199, 210)))
+                        .mockReturnValueOnce(Promise.resolve(mockTweets.slice(209, 210)));
 
+                    expect.assertions(4);
                     return retriever.retrieveTweets(users).then(() => {
                         expect(getTweetsSpy).toHaveBeenCalledTimes(3);
                         expect(getTweetsSpy).toHaveBeenCalledWith({
@@ -181,10 +190,11 @@ describe('Retrieve', () => {
                     const users = { '001': '5001' };
                     const mockTweets = tweetBuilder.generateRandomTweets(210);
                     getTweetsSpy
-                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 200)))
-                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(199, 210)))
-                        .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(209, 210)));
+                        .mockReturnValueOnce(Promise.resolve(mockTweets.slice(0, 200)))
+                        .mockReturnValueOnce(Promise.resolve(mockTweets.slice(199, 210)))
+                        .mockReturnValueOnce(Promise.resolve(mockTweets.slice(209, 210)));
 
+                    expect.assertions(1);
                     return retriever.retrieveTweets(users).then((tweets) => {
                         expect(tweets).toEqual([ mockTweets ]);
                     });
@@ -207,10 +217,10 @@ describe('Retrieve', () => {
 
             it('should specify the correct parameters for a retrieval', () => {
                 const users = { '001': 0, '002': 0 };
-                retrieveForNewSpy.mockImplementation(() => Promise.resolve({}));
+                retrieveForNewSpy.mockReturnValue(Promise.resolve([]));
 
-                return retriever.retrieveTweets(users).then((tweets) => {
-                    expect(tweets).toEqual([ {}, {} ]);
+                expect.assertions(3);
+                return retriever.retrieveTweets(users).then(() => {
                     expect(retrieveForNewSpy).toHaveBeenCalledTimes(2);
                     expect(retrieveForNewSpy).toHaveBeenCalledWith({
                         user_id: '001',
@@ -230,9 +240,10 @@ describe('Retrieve', () => {
                         const mockTweets = tweetBuilder.generateRandomTweets(5);
                         retriever.TWEETS_TO_TRACK = 500;
                         getTweetsSpy
-                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 5)))
-                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(4, 5)));
+                            .mockReturnValueOnce(Promise.resolve(mockTweets.slice(0, 5)))
+                            .mockReturnValueOnce(Promise.resolve(mockTweets.slice(4, 5)));
 
+                        expect.assertions(3);
                         return retriever.retrieveTweets(users).then(() => {
                             expect(getTweetsSpy).toHaveBeenCalledTimes(2);
                             expect(getTweetsSpy).toHaveBeenCalledWith({
@@ -254,9 +265,10 @@ describe('Retrieve', () => {
                         const mockTweets = tweetBuilder.generateRandomTweets(5);
                         retriever.TWEETS_TO_TRACK = 500;
                         getTweetsSpy
-                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 5)))
-                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(4, 5)));
+                            .mockReturnValueOnce(Promise.resolve(mockTweets.slice(0, 5)))
+                            .mockReturnValueOnce(Promise.resolve(mockTweets.slice(4, 5)));
 
+                        expect.assertions(1);
                         return retriever.retrieveTweets(users).then((tweets) => {
                             expect(tweets).toEqual([ mockTweets ]);
                         });
@@ -269,8 +281,9 @@ describe('Retrieve', () => {
                         const mockTweets = tweetBuilder.generateRandomTweets(10);
                         retriever.TWEETS_TO_TRACK = 5;
                         getTweetsSpy
-                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 10)));
+                            .mockReturnValueOnce(Promise.resolve(mockTweets.slice(0, 10)));
 
+                        expect.assertions(2);
                         return retriever.retrieveTweets(users).then(() => {
                             expect(getTweetsSpy).toHaveBeenCalledTimes(1);
                             expect(getTweetsSpy).toHaveBeenCalledWith({
@@ -286,8 +299,9 @@ describe('Retrieve', () => {
                         const mockTweets = tweetBuilder.generateRandomTweets(10);
                         retriever.TWEETS_TO_TRACK = 5;
                         getTweetsSpy
-                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 10)));
+                            .mockReturnValueOnce(Promise.resolve(mockTweets.slice(0, 10)));
 
+                        expect.assertions(1);
                         return retriever.retrieveTweets(users).then((tweets) => {
                             expect(tweets).toEqual([ mockTweets.slice(0, 5) ]);
                         });
@@ -302,10 +316,11 @@ describe('Retrieve', () => {
                         const mockTweets = tweetBuilder.generateRandomTweets(210);
                         retriever.TWEETS_TO_TRACK = 500;
                         getTweetsSpy
-                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 200)))
-                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(199, 210)))
-                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(209, 210)));
+                            .mockReturnValueOnce(Promise.resolve(mockTweets.slice(0, 200)))
+                            .mockReturnValueOnce(Promise.resolve(mockTweets.slice(199, 210)))
+                            .mockReturnValueOnce(Promise.resolve(mockTweets.slice(209, 210)));
 
+                        expect.assertions(4);
                         return retriever.retrieveTweets(users).then(() => {
                             expect(getTweetsSpy).toHaveBeenCalledTimes(3);
                             expect(getTweetsSpy).toHaveBeenCalledWith({
@@ -333,10 +348,11 @@ describe('Retrieve', () => {
                         const mockTweets = tweetBuilder.generateRandomTweets(210);
                         retriever.TWEETS_TO_TRACK = 500;
                         getTweetsSpy
-                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 200)))
-                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(199, 210)))
-                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(209, 210)));
+                            .mockReturnValueOnce(Promise.resolve(mockTweets.slice(0, 200)))
+                            .mockReturnValueOnce(Promise.resolve(mockTweets.slice(199, 210)))
+                            .mockReturnValueOnce(Promise.resolve(mockTweets.slice(209, 210)));
 
+                        expect.assertions(1);
                         return retriever.retrieveTweets(users).then((tweets) => {
                             expect(tweets).toEqual([ mockTweets ]);
                         });
@@ -349,9 +365,10 @@ describe('Retrieve', () => {
                         const mockTweets = tweetBuilder.generateRandomTweets(220);
                         retriever.TWEETS_TO_TRACK = 210;
                         getTweetsSpy
-                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 200)))
-                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(199, 220)));
+                            .mockReturnValueOnce(Promise.resolve(mockTweets.slice(0, 200)))
+                            .mockReturnValueOnce(Promise.resolve(mockTweets.slice(199, 220)));
 
+                        expect.assertions(3);
                         return retriever.retrieveTweets(users).then(() => {
                             expect(getTweetsSpy).toHaveBeenCalledTimes(2);
                             expect(getTweetsSpy).toHaveBeenCalledWith({
@@ -373,11 +390,12 @@ describe('Retrieve', () => {
                         const mockTweets = tweetBuilder.generateRandomTweets(220);
                         retriever.TWEETS_TO_TRACK = 210;
                         getTweetsSpy
-                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(0, 200)))
-                            .mockImplementationOnce(() => Promise.resolve(mockTweets.slice(199, 220)));
+                            .mockReturnValueOnce(Promise.resolve(mockTweets.slice(0, 200)))
+                            .mockReturnValueOnce(Promise.resolve(mockTweets.slice(199, 220)));
 
+                        expect.assertions(1);
                         return retriever.retrieveTweets(users).then((tweets) => {
-                            expect(tweets).toEqual([ mockTweets.slice(0, 210)] );
+                            expect(tweets).toEqual([ mockTweets.slice(0, 210) ]);
                         });
                     });
                 });

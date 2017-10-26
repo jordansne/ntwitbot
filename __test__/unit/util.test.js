@@ -44,14 +44,11 @@ describe('Util', () => {
     });
 
     it('should generate shuffled arrays', () => {
-        const shuffleMock = jest.spyOn(utils, 'shuffleArray');
+        const shuffleMock = jest.spyOn(utils, 'shuffleArray')
+            .mockReturnValueOnce([2, 0, 1, 3 ]);
 
-        expect.assertions(2);
-        shuffleMock.mockImplementationOnce((array) => {
-            expect(array).toEqual([ 0, 1, 2, 3 ]);
-            return [2, 0, 1, 3];
-        });
         expect(utils.generateShuffledArray(4)).toEqual([ 2, 0, 1, 3 ]);
+        expect(shuffleMock).toHaveBeenCalledWith([ 0, 1, 2, 3 ]);
 
         shuffleMock.mockRestore();
     });

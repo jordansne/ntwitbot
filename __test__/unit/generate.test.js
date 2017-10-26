@@ -23,11 +23,11 @@ const generator = new Generate(new Util());
 
 describe('Generate', () => {
     it('should determine the next key from a word stack', () => {
-        const wordStack = [ 'Test', 'message', 'list'];
-        expect(generator.keyOf(wordStack)).toEqual('message list');
+        const wordStack = [ 'Test', 'message', 'list' ];
+        expect(generator.keyOf(wordStack)).toBe('message list');
     });
 
-    it('should return valid first words', () => {
+    it('should return a shuffled list of valid first words', () => {
         const wordDB = {
             'First one': [{}],
             'not first': [{}],
@@ -41,10 +41,7 @@ describe('Generate', () => {
     });
 
     it('should only return random words that haven\'t been popped', () => {
-        const wordDB = {
-            'This is': [{ word: 'one', beenPopped: true }, { word: 'two' }]
-        };
-
+        const wordDB = { 'This is': [{ word: 'one', beenPopped: true }, { word: 'two' }] };
         expect(generator.getRandomWords(wordDB, 'This is')).toEqual([ 'two' ]);
     });
 
@@ -60,17 +57,15 @@ describe('Generate', () => {
         });
 
         it('should properly handle finishing with a word', () => {
-            getPossibleMovesMock.mockImplementationOnce(() => ['FINISH_WITH:good.']);
-            const wordDB = {
-                'This is': [{ word: 'good.' }]
-            };
+            getPossibleMovesMock.mockReturnValueOnce([ 'FINISH_WITH:good.' ]);
+            const wordDB = { 'This is': [{ word: 'good.' }] };
 
             expect(generator.generateTweet(wordDB)).toBe('This is good.');
             expect(getPossibleMovesMock).toHaveBeenCalledTimes(1);
         });
 
         it('should properly handle adding a word', () => {
-            getPossibleMovesMock.mockImplementationOnce(() => ['ADD_WORD:a']);
+            getPossibleMovesMock.mockReturnValueOnce([ 'ADD_WORD:a' ]);
             const wordDB = {
                 'This is': [{ word: 'a' }],
                 'is a': [{ word: 'test.' }]
@@ -82,11 +77,9 @@ describe('Generate', () => {
 
         it('should properly handle popping a word', () => {
             getPossibleMovesMock
-                .mockImplementationOnce(() => ['ADD_WORD:a'])
-                .mockImplementationOnce(() => ['POP_WORD:']);
-            const wordDB = {
-                'This is': [{ word: 'a' }, { word: 'good.' }]
-            };
+                .mockReturnValueOnce([ 'ADD_WORD:a' ])
+                .mockReturnValueOnce([ 'POP_WORD:' ]);
+            const wordDB = { 'This is': [{ word: 'a' }, { word: 'good.' }] };
 
             expect(generator.generateTweet(wordDB)).toBe('This is good.');
             expect(getPossibleMovesMock).toHaveBeenCalledTimes(3);
@@ -95,7 +88,7 @@ describe('Generate', () => {
 
     describe('Getting Possible Moves for generation', () => {
         it('should add the move to finish with a word that ends in punctuation', () => {
-            const wordStack = ['This', 'is', 'a'];
+            const wordStack = [ 'This', 'is', 'a' ];
             const wordDB = {
                 'This is': [{ word: 'a' }],
                 'is a': [{ word: 'test.' }]
@@ -105,7 +98,7 @@ describe('Generate', () => {
         });
 
         it('should add the move to add a word that doesn\'t end in punctuation', () => {
-            const wordStack = ['This', 'is', 'a'];
+            const wordStack = [ 'This', 'is', 'a' ];
             const wordDB = {
                 'This is': [{ word: 'a' }],
                 'is a': [{ word: 'test' }]
@@ -115,7 +108,7 @@ describe('Generate', () => {
         });
 
         it('should add the move to pop a word if all next words have been popped', () => {
-            const wordStack = ['This', 'is', 'a'];
+            const wordStack = [ 'This', 'is', 'a' ];
             const wordDB = {
                 'This is': [{ word: 'a' }],
                 'is a': [{ word: 'test', beenPopped: true }]
@@ -125,10 +118,8 @@ describe('Generate', () => {
         });
 
         it('should add the move to pop a word if there is no next words', () => {
-            const wordStack = ['This', 'is', 'bad'];
-            const wordDB = {
-                'This is': [{ word: 'bad' }],
-            };
+            const wordStack = [ 'This', 'is', 'bad' ];
+            const wordDB = { 'This is': [{ word: 'bad' }] };
 
             expect(generator.getPossibleMoves(wordDB, wordStack)).toEqual([ 'POP_WORD:' ]);
         });
@@ -150,11 +141,7 @@ describe('Generate', () => {
     describe('Word Stack Popping', () => {
         it('should pop only one word when the stack size is >= 3', () => {
             const wordStack = [ 'Test', 'message', 'list' ];
-            const wordDB = {
-                'Test message': [{
-                    word: 'list'
-                }],
-            };
+            const wordDB = { 'Test message': [{ word: 'list' }] };
 
             generator.popWord(wordStack, wordDB);
             expect(wordStack).toEqual([ 'Test', 'message' ]);
@@ -162,7 +149,7 @@ describe('Generate', () => {
         });
 
         it('should pop all words when the stack size is < 3', () => {
-            const wordStack = [ 'Test', 'message'];
+            const wordStack = [ 'Test', 'message' ];
 
             generator.popWord(wordStack, {});
             expect(wordStack).toEqual([]);
