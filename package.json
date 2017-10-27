@@ -12,6 +12,7 @@
     "twitter": "^1.7.1"
   },
   "devDependencies": {
+    "coveralls": "^3.0.0",
     "eslint": "^4.8.0",
     "eslint-plugin-node": "^5.2.0",
     "jest": "^21.2.1"
@@ -29,7 +30,9 @@
     "url": "https://github.com/jordansne/ntwitbot/issues"
   },
   "jest": {
-      "coverageDirectory": "build/coverage",
-      "collectCoverageFrom" : [ "lib/**/*.js" ]
+    "coverageDirectory": "build/coverage",
+    "collectCoverageFrom": [
+      "lib/**/*.js"
+    ]
   }
 }
