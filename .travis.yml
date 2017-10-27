@@ -13,5 +13,5 @@ script:
 after_script:
   - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
       cd ./build;
-      ./cc-test-reporter after-build --prefix '..' --exit-code $TRAVIS_TEST_RESULT;
+      ./cc-test-reporter after-build --prefix /home/travis/build/jordansne/ntwitbot --exit-code $TRAVIS_TEST_RESULT;
     fi
