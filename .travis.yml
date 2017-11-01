@@ -3,16 +3,14 @@ node_js:
   - "node"
 before_script:
   - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-      mkdir build;
-      curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./build/cc-test-reporter;
-      chmod +x ./build/cc-test-reporter;
-      ./build/cc-test-reporter before-build;
+      curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter;
+      chmod +x ./cc-test-reporter;
+      ./cc-test-reporter before-build;
     fi
 script:
   - "npm run test-ci"
 after_script:
   - "cat ./build/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-      cd ./build;
-      ./cc-test-reporter after-build --prefix /home/travis/build/jordansne/ntwitbot --exit-code $TRAVIS_TEST_RESULT;
+      ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT --input-type lcov "./build/coverage/lcov.info";
     fi
