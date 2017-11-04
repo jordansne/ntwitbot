@@ -11,7 +11,7 @@ script:
   - "npm run test-ci"
 after_script:
   - "cat ./build/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" && $TRAVIS_TEST_RESULT == 0 ]; then
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_TEST_RESULT" == "0" ]; then
         ./cc-test-reporter format-coverage --input-type lcov "./build/coverage/lcov.info";
         ./cc-test-reporter upload-coverage;
     fi
