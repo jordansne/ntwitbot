@@ -17,7 +17,7 @@
  */
 
 const Main = require('../../lib/main.js');
-const main = new Main();
+const main = new Main({}, { debug: false });
 
 describe('Main', () => {
     describe('State Initialization', () => {
