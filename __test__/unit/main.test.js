@@ -284,4 +284,66 @@ describe('Main', () => {
             return expect(main.handleMentions()).resolves.toBeUndefined();
         });
     });
+
+    describe('Sending tweets', () => {
+        const tweetData = { tweet: 'test' };
+        let readTweetDataMock, generateTweetMock, postTweetMock;
+
+        beforeAll(() => {
+            readTweetDataMock = jest.spyOn(main.dataHandler, 'readTweetData').mockReturnValue(Promise.resolve(tweetData));
+            generateTweetMock = jest.spyOn(main.generator, 'generateTweet').mockReturnValue('tweet');
+            postTweetMock = jest.spyOn(main.twitterHandler, 'postTweet').mockReturnValue(Promise.resolve());
+        });
+
+        afterEach(() => {
+            readTweetDataMock.mockClear();
+            generateTweetMock.mockClear();
+            postTweetMock.mockClear();
+        });
+
+        afterAll(() => {
+            readTweetDataMock.mockRestore();
+            generateTweetMock.mockRestore();
+            postTweetMock.mockRestore();
+        });
+
+        it('should generate a tweet from tweet data', () => {
+            expect.assertions(3);
+            return main.sendTweet().then(() => {
+                expect(readTweetDataMock).toHaveBeenCalledTimes(1);
+                expect(generateTweetMock).toHaveBeenCalledTimes(1);
+                expect(generateTweetMock).toHaveBeenCalledWith(tweetData);
+            });
+        });
+
+        it('should properly send a random tweet', () => {
+            expect.assertions(2);
+            return main.sendTweet().then(() => {
+                expect(postTweetMock).toHaveBeenCalledTimes(1);
+                expect(postTweetMock).toHaveBeenCalledWith('tweet', undefined, undefined);
+            });
+        });
+
+        it('should properly send a random reply tweet', () => {
+            expect.assertions(2);
+            return main.sendTweet('001', 'testuser').then(() => {
+                expect(postTweetMock).toHaveBeenCalledTimes(1);
+                expect(postTweetMock).toHaveBeenCalledWith('tweet', '001', 'testuser');
+            });
+        });
+
+        it('should properly handle an error when trying to post the tweet', () => {
+            postTweetMock.mockReturnValueOnce(Promise.reject({}));
+
+            expect.assertions(1);
+            return expect(main.sendTweet()).resolves.toBeUndefined();
+        });
+
+        it('should throw an Error if an error occurs reading the database', () => {
+            readTweetDataMock.mockReturnValueOnce(Promise.reject({}));
+
+            expect.assertions(1);
+            return expect(main.sendTweet()).rejects.toEqual(expect.any(Error));
+        });
+    });
 });
