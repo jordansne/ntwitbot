@@ -126,6 +126,85 @@ describe('Main', () => {
         });
     });
 
+    describe('Tweet Handling', () => {
+        let updateTrackedMock, retrieveTweetsMock, processRetrievalsMock, saveTweetDataMock, processTweetsMock;
+
+        beforeAll(() => {
+            updateTrackedMock = jest.spyOn(main, 'updateTracked').mockReturnValue(Promise.resolve());
+            retrieveTweetsMock = jest.spyOn(main.retriever, 'retrieveTweets').mockReturnValue(Promise.resolve([]));
+            processRetrievalsMock = jest.spyOn(main, 'processRetrievals').mockReturnValue([]);
+            saveTweetDataMock = jest.spyOn(main.dataHandler, 'saveTweetData').mockReturnValue(Promise.resolve());
+            processTweetsMock = jest.spyOn(main.processor, 'processTweets').mockReturnValue([]);
+        });
+
+        afterEach(() => {
+            updateTrackedMock.mockClear();
+            retrieveTweetsMock.mockClear();
+            processRetrievalsMock.mockClear();
+            saveTweetDataMock.mockClear();
+            processTweetsMock.mockClear();
+        });
+
+        afterAll(() => {
+            updateTrackedMock.mockRestore();
+            retrieveTweetsMock.mockRestore();
+            processRetrievalsMock.mockRestore();
+            saveTweetDataMock.mockRestore();
+            processTweetsMock.mockRestore();
+        });
+
+        it('should update tracked users', () => {
+            expect.assertions(1);
+            return main.handleTweets().then(() => {
+                expect(updateTrackedMock).toHaveBeenCalledTimes(1);
+            });
+        });
+
+        it('should retrieve new tweets', () => {
+            expect.assertions(1);
+            return main.handleTweets().then(() => {
+                expect(retrieveTweetsMock).toHaveBeenCalledTimes(1);
+            });
+        });
+
+        it('should process new tweet retrievals', () => {
+            expect.assertions(1);
+            return main.handleTweets().then(() => {
+                expect(processRetrievalsMock).toHaveBeenCalledTimes(1);
+            });
+        });
+
+        it('should save tweet data iff there is new tweets', () => {
+            const tweets = [{ text: 'Some tweet' }];
+            processRetrievalsMock.mockReturnValueOnce(tweets);
+            processTweetsMock.mockReturnValueOnce(tweets);
+
+            expect.assertions(4);
+            return main.handleTweets().then(() => {
+                expect(processTweetsMock).toHaveBeenCalledTimes(1);
+                expect(processTweetsMock).toHaveBeenCalledWith(tweets);
+                expect(saveTweetDataMock).toHaveBeenCalledTimes(1);
+                expect(saveTweetDataMock).toHaveBeenCalledWith(tweets);
+            });
+        });
+
+        it('should properly handle if an error occurs updating tracked users', () => {
+            updateTrackedMock.mockReturnValueOnce(Promise.reject({}));
+
+            expect.assertions(1);
+            return expect(main.handleTweets()).resolves.toBe(false);
+        });
+
+        it('should throw an Error if an error occurs saving tweet data', () => {
+            const tweets = [{ text: 'Some tweet' }];
+            processRetrievalsMock.mockReturnValueOnce(tweets);
+            saveTweetDataMock.mockReturnValueOnce(Promise.reject({}));
+
+            expect.assertions(1);
+            return expect(main.handleTweets()).rejects.toEqual(expect.any(Error));
+        });
+    });
+
     describe('Retrieval Processing', () => {
         const retrievals = [
             [{ user: { id_str: '001' }, text: 'Test one.', id_str: '5001' }],
