@@ -20,6 +20,50 @@ const Main = require('../../lib/main.js');
 const main = new Main({}, { debug: false });
 
 describe('Main', () => {
+    describe('Initialization', () => {
+        let verifyMock, initStateMock, createDataDirMock;
+
+        beforeAll(() => {
+            verifyMock = jest.spyOn(main.twitterHandler, 'verify').mockReturnValue(Promise.resolve('001'));
+            initStateMock = jest.spyOn(main, 'initState').mockReturnValue(Promise.resolve());
+            createDataDirMock = jest.spyOn(main.dataHandler, 'createDataDir').mockReturnValue(Promise.resolve());
+        });
+
+        afterEach(() => {
+            verifyMock.mockClear();
+            initStateMock.mockClear();
+            createDataDirMock.mockClear();
+        });
+
+        afterAll(() => {
+            verifyMock.mockRestore();
+            initStateMock.mockRestore();
+            createDataDirMock.mockRestore();
+        });
+
+        it('should initialize the state on twitter verification success', () => {
+            expect.assertions(2);
+            return main.init().then(() => {
+                expect(verifyMock).toHaveBeenCalledTimes(1);
+                expect(initStateMock).toHaveBeenCalledTimes(1);
+            });
+        });
+
+        it('should create a blank directory', () => {
+            expect.assertions(1);
+            return main.init().then(() => {
+                expect(createDataDirMock).toHaveBeenCalledTimes(1);
+            });
+        });
+
+        it('should throw an Error if an error occurs verifying twitter data', () => {
+            verifyMock.mockReturnValueOnce(Promise.reject({}));
+
+            expect.assertions(1);
+            return expect(main.init()).rejects.toEqual(expect.any(Error));
+        });
+    });
+
     describe('State Initialization', () => {
         let readStateMock;
 
