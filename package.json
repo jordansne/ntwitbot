@@ -19,8 +19,11 @@
   },
   "scripts": {
     "start": "node --use-strict index.js",
-    "test": "jest",
-    "test-ci": "jest --coverage"
+    "lint": "eslint index.js lib/** __test__/** --ext js",
+    "jest": "jest",
+    "jest-coverage": "jest --coverage",
+    "test": "npm run lint && npm run jest",
+    "test-ci": "npm run lint && npm run jest-coverage"
   },
   "repository": {
     "type": "git",
