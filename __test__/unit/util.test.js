@@ -16,10 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* eslint no-unused-vars: ['error', { 'varsIgnorePattern': 'colors' }] */
+
+const colors = require('colors');
+
 const Util = require('../../lib/util.js');
 const utils = new Util();
 
 describe('Util', () => {
+    it('should properly set the debug flag', () => {
+        utils.setDebug(true);
+        expect(utils.debug).toBe(true);
+
+        utils.setDebug(false);
+        expect(utils.debug).toBe(false);
+    });
+
     it('should capitalize words', () => {
         expect(utils.capitalize('test')).toBe('Test');
         expect(utils.capitalize('Test')).toBe('Test');
@@ -67,6 +79,68 @@ describe('Util', () => {
         expect(utils.endsWithPunc('This is a test!')).toBe(true);
         expect(utils.endsWithPunc('This is a test?')).toBe(true);
         expect(utils.endsWithPunc('This is a test')).toBe(false);
+    });
+
+    describe('Logging', () => {
+        let logMock, errorMock, getFormattedTimeMock, NODE_ENV_SAVE;
+
+        beforeAll(() => {
+            logMock = jest.spyOn(console, 'log').mockReturnValue();
+            errorMock = jest.spyOn(console, 'error').mockReturnValue();
+            getFormattedTimeMock = jest.spyOn(utils, 'getFormattedTime').mockReturnValue('06/03/2016 08:01:04');
+
+            NODE_ENV_SAVE = process.env.NODE_ENV;
+            delete process.env.NODE_ENV;
+        });
+
+        afterEach(() => {
+            logMock.mockClear();
+            errorMock.mockClear();
+            getFormattedTimeMock.mockClear();
+        });
+
+        afterAll(() => {
+            logMock.mockRestore();
+            errorMock.mockRestore();
+            getFormattedTimeMock.mockRestore();
+
+            process.env.NODE_ENV = NODE_ENV_SAVE;
+        });
+
+        it('should display log messages if NODE_ENV is not \'test\'', () => {
+            utils.log('test');
+            expect(logMock).toHaveBeenCalledTimes(1);
+            expect(logMock).toHaveBeenCalledWith('06/03/2016 08:01:04 ' + ' INFO '.black.bgWhite + ' %s', 'test');
+        });
+
+        it('should display error messages if NODE_ENV is not \'test\'', () => {
+            utils.logError('test');
+            expect(errorMock).toHaveBeenCalledTimes(1);
+            expect(errorMock).toHaveBeenCalledWith('06/03/2016 08:01:04 ' + ' ERROR '.black.bgRed + ' %s'.red, 'test');
+        });
+
+        it('should display error messages if NODE_ENV is not \'test\' with an error object', () => {
+            const error = { stack: 'error' };
+
+            utils.logError('test', error);
+            expect(errorMock).toHaveBeenCalledTimes(2);
+            expect(errorMock).toHaveBeenCalledWith(
+                '06/03/2016 08:01:04 ' + ' ERROR '.black.bgRed + ' %s'.red, 'test'
+            );
+            expect(errorMock).toHaveBeenCalledWith(
+                '06/03/2016 08:01:04 ' + ' ERROR '.black.bgRed + '     %s'.red, error.stack
+            );
+        });
+
+        it('should display debug messages if NODE_ENV is not \'test\' & the debug flag is true', () => {
+            utils.debug = true;
+
+            utils.logDebug('test');
+            expect(logMock).toHaveBeenCalledTimes(1);
+            expect(logMock).toHaveBeenCalledWith('06/03/2016 08:01:04 ' + ' DEBUG '.black.bgCyan + ' %s'.cyan, 'test');
+
+            utils.debug = false;
+        });
     });
 
     describe('Date', () => {
