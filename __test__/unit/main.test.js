@@ -218,7 +218,7 @@ describe('Main', () => {
             });
         });
 
-        it('should save tweet data iff there is new tweets', () => {
+        it('should save tweet data if there is new tweets', () => {
             const tweets = [{ text: 'Some tweet' }];
             processRetrievalsMock.mockReturnValueOnce(tweets);
             processTweetsMock.mockReturnValueOnce(tweets);
@@ -455,7 +455,7 @@ describe('Main', () => {
             });
         });
 
-        it('should properly handle an error when trying to post the tweet', () => {
+        it('should properly handle if an error occurs posting the tweet', () => {
             postTweetMock.mockReturnValueOnce(Promise.reject({}));
 
             expect.assertions(1);
