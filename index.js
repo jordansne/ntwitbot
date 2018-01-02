@@ -19,7 +19,7 @@
  const secretData = require('./config/secret'),
        setup      = require('./config/setup');
 
-const Main = require('./lib/main.js');
+const Main = require('./src/main.js');
 const main = new Main(secretData, setup);
 
 main.init().then(() => {

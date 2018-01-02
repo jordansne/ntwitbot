@@ -19,8 +19,8 @@
 jest.mock('fs');
 const fsMock = require('fs');
 
-const Data = require('../../lib/data.js');
-const Util = require('../../lib/util.js');
+const Data = require('../../src/data.js');
+const Util = require('../../src/util.js');
 
 const dataHandler = new Data(new Util());
 

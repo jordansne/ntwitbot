@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const Generate = require('../../lib/generate.js');
-const Util     = require('../../lib/util.js');
+const Generate = require('../../src/generate.js');
+const Util     = require('../../src/util.js');
 
 const generator = new Generate(new Util());
 

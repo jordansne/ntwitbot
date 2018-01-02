@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const Retrieve  = require('../../lib/retrieve.js');
-const Twitter   = require('../../lib/twitter.js');
-const Util      = require('../../lib/util.js');
+const Retrieve  = require('../../src/retrieve.js');
+const Twitter   = require('../../src/twitter.js');
+const Util      = require('../../src/util.js');
 const tweetBuilder = require('../builders/tweetbuilder.js');
 
 const utils = new Util();

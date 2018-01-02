@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "node --use-strict index.js",
-    "lint": "eslint index.js lib/** __test__/** --ext js",
+    "lint": "eslint index.js src/** __test__/** --ext js",
     "jest": "jest",
     "jest-coverage": "jest --coverage",
     "test": "npm run lint && npm run jest",
@@ -35,7 +35,7 @@
   "jest": {
     "coverageDirectory": "build/coverage",
     "collectCoverageFrom": [
-      "lib/**/*.js"
+      "src/**/*.js"
     ]
   }
 }

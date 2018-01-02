@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const Main = require('../../lib/main.js');
+const Main = require('../../src/main.js');
 const main = new Main({}, { debug: false });
 
 describe('Main', () => {

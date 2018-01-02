@@ -20,7 +20,7 @@
 
 const colors = require('colors');
 
-const Util = require('../../lib/util.js');
+const Util = require('../../src/util.js');
 const utils = new Util();
 
 describe('Util', () => {

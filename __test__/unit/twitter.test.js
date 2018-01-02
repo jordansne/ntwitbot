@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const Twitter = require('../../lib/twitter.js');
-const Util    = require('../../lib/util.js');
+const Twitter = require('../../src/twitter.js');
+const Util    = require('../../src/util.js');
 
 const twitter = new Twitter({}, new Util());
 
