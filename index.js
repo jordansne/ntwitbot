@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
- const secretData = require('./config/secret'),
-       setup      = require('./config/setup');
+const secretData = require('./config/secret'),
+      setup      = require('./config/setup');
 
 const Main = require('./src/main.js');
 const main = new Main(secretData, setup);
