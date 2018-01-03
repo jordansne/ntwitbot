@@ -174,7 +174,7 @@ module.exports = class Data {
 
                 fs.readFile(filePath, 'utf8', (error, data) => {
                     if (error) {
-                        this.utils.log('I/O: Failed to read data from: ' + filePath);
+                        this.utils.logError('I/O: Failed to read data from: ' + filePath);
                         reject(error);
                         return;
                     }
