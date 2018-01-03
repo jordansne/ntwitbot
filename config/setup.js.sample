@@ -1,4 +1,3 @@
 module.exports = {
-    "userToErrorReport": "",
     "debug": false
 };
