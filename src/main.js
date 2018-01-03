@@ -61,6 +61,7 @@ module.exports = class Main {
 
     /**
      * Initializes the state object.
+     * @private
      * @return {Promise} Resolves when done setting the state.
      */
     initState() {
