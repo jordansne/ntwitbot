@@ -37,4 +37,4 @@ Pull requests are welcome. Before a PR please `npm run test` to ensure all tests
 
 ## License
 
-This app is licensed under [GPL-v3](https://www.github.com/jordansne/ntwitbot/blob/develop/LICENSE).
+This app is licensed under [MIT](https://www.github.com/jordansne/ntwitbot/blob/develop/LICENSE).

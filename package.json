@@ -4,7 +4,7 @@
   "description": "A simple interactive twitter bot.",
   "author": "Jordan Sne",
   "main": "index.js",
-  "license": "GPL-3.0",
+  "license": "MIT",
   "dependencies": {
     "chance": "~1.0.11",
     "colors": "~1.1.2",
