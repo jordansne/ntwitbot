@@ -31,11 +31,9 @@ module.exports = class Data {
     createDataDir() {
         return new Promise((resolve, reject) => {
             fs.mkdir(this.DATA_DIR, (error) => {
-                if (error) {
-                    if (error.code !== 'EEXIST') {
-                        reject(error);
-                        return;
-                    }
+                if (error && error.code !== 'EEXIST') {
+                    reject(error);
+                    return;
                 }
 
                 resolve();
