@@ -1,5 +1,5 @@
 /**
- * NTwitBot - util.js
+ * NTwitBot - utils.js
  * @file Collection of various utility functions.
  * @author Jordan Sne <jordansne@gmail.com>
  * @license MIT
@@ -13,7 +13,7 @@ const colors = require('colors');
 /**
  * Utilities class. Contains logging and helper methods.
  */
-module.exports = class Util {
+class Utils {
 
     constructor() {
         this.debug = false;
@@ -193,4 +193,6 @@ module.exports = class Util {
         return string.endsWith('.') || string.endsWith('!') || string.endsWith('?');
     }
 
-};
+}
+
+module.exports = new Utils();

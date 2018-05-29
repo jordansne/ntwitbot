@@ -5,9 +5,7 @@
  */
 
 const Twitter = require('../../src/twitter.js');
-const Util    = require('../../src/util.js');
-
-const twitter = new Twitter({}, new Util());
+const twitter = new Twitter({});
 
 describe('Twitter', () => {
     describe('POST Requests', () => {

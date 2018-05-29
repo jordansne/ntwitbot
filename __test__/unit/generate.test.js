@@ -5,9 +5,7 @@
  */
 
 const Generate = require('../../src/generate.js');
-const Util     = require('../../src/util.js');
-
-const generator = new Generate(new Util());
+const generator = new Generate();
 
 describe('Generate', () => {
     it('should determine the next key from a word stack', () => {

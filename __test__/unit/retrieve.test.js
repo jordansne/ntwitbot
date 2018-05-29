@@ -6,11 +6,9 @@
 
 const Retrieve  = require('../../src/retrieve.js');
 const Twitter   = require('../../src/twitter.js');
-const Util      = require('../../src/util.js');
 const tweetBuilder = require('../builders/tweetbuilder.js');
 
-const utils = new Util();
-const retriever = new Retrieve(new Twitter({}, utils), utils);
+const retriever = new Retrieve(new Twitter({}));
 
 describe('Retrieve', () => {
     describe('Mention Retrievals', () => {

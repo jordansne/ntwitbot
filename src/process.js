@@ -6,19 +6,12 @@
  */
 
 const entities = require('html-entities').AllHtmlEntities;
+const Utils    = require('./utils.js');
 
 /**
  * Tweet processor class. Processes new tweet data & saves it in the database.
  */
 module.exports = class Process {
-
-    /**
-     * Initialize the class.
-     * @param {Util} utils - The utilities object needed for logging, etc.
-     */
-    constructor(utils) {
-        this.utils = utils;
-    }
 
     /**
      * Process tracked tweets of the bot and returns the data.
@@ -28,7 +21,7 @@ module.exports = class Process {
     processTweets(tweets) {
         const newData = {};
 
-        this.utils.log('Processing ' + tweets.length + ' new tweets');
+        Utils.log('Processing ' + tweets.length + ' new tweets');
 
         // Process tweets
         for (let i = 0; i < tweets.length; i++) {
@@ -63,13 +56,13 @@ module.exports = class Process {
                 // Create a new array for the word pair
                 data[key] = [{
                     word: words[i + 2],
-                    time: this.utils.getTime()
+                    time: Utils.getTime()
                 }];
             } else {
                 // Append to the existing word pair
                 data[key].push({
                     word: words[i + 2],
-                    time: this.utils.getTime()
+                    time: Utils.getTime()
                 });
             }
         }
@@ -113,12 +106,12 @@ module.exports = class Process {
      */
     capitalizeSentences(words) {
         // Capitalize the first word
-        words[0] = this.utils.capitalize(words[0]);
+        words[0] = Utils.capitalize(words[0]);
 
         // Capitalize any words after a sentence
         for (let i = 1; i < words.length; i++) {
-            if (this.utils.endsWithPunc(words[i - 1])) {
-                words[i] = this.utils.capitalize(words[i]);
+            if (Utils.endsWithPunc(words[i - 1])) {
+                words[i] = Utils.capitalize(words[i]);
             }
         }
     }
@@ -131,7 +124,7 @@ module.exports = class Process {
     appendPeriod(words) {
         let lastWord = words[words.length - 1];
 
-        if (!this.utils.endsWithPunc(lastWord) && !lastWord.endsWith(',')) {
+        if (!Utils.endsWithPunc(lastWord) && !lastWord.endsWith(',')) {
             words[words.length - 1] += '.';
         }
     }

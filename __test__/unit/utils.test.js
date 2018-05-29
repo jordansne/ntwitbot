@@ -1,5 +1,5 @@
 /**
- * NTwitBot - util.test.js
+ * NTwitBot - utils.test.js
  * @author Jordan Sne <jordansne@gmail.com>
  * @license MIT
  */
@@ -7,28 +7,26 @@
 /* eslint no-unused-vars: ['error', { 'varsIgnorePattern': 'colors' }] */
 
 const colors = require('colors');
+const Utils = require('../../src/utils.js');
 
-const Util = require('../../src/util.js');
-const utils = new Util();
-
-describe('Util', () => {
+describe('Utils', () => {
     it('should properly set the debug flag', () => {
-        utils.setDebug(true);
-        expect(utils.debug).toBe(true);
+        Utils.setDebug(true);
+        expect(Utils.debug).toBe(true);
 
-        utils.setDebug(false);
-        expect(utils.debug).toBe(false);
+        Utils.setDebug(false);
+        expect(Utils.debug).toBe(false);
     });
 
     it('should capitalize words', () => {
-        expect(utils.capitalize('test')).toBe('Test');
-        expect(utils.capitalize('Test')).toBe('Test');
-        expect(utils.capitalize('#test')).toBe('#test');
+        expect(Utils.capitalize('test')).toBe('Test');
+        expect(Utils.capitalize('Test')).toBe('Test');
+        expect(Utils.capitalize('#test')).toBe('#test');
     });
 
     it('should check capitalization of chars', () => {
-        expect(utils.isUpperCase('t')).toBe(false);
-        expect(utils.isUpperCase('T')).toBe(true);
+        expect(Utils.isUpperCase('t')).toBe(false);
+        expect(Utils.isUpperCase('T')).toBe(true);
     });
 
     it('should check if an object is in an array', () => {
@@ -39,22 +37,22 @@ describe('Util', () => {
         const array1 = [someObject, otherObject1];
         const array2 = [otherObject1, otherObject2];
 
-        expect(utils.isInArray(array1, someObject)).toBe(true);
-        expect(utils.isInArray(array2, someObject)).toBe(false);
+        expect(Utils.isInArray(array1, someObject)).toBe(true);
+        expect(Utils.isInArray(array2, someObject)).toBe(false);
     });
 
     it('should generate shuffled arrays', () => {
-        const shuffleMock = jest.spyOn(utils, 'shuffleArray')
+        const shuffleMock = jest.spyOn(Utils, 'shuffleArray')
             .mockReturnValueOnce([2, 0, 1, 3 ]);
 
-        expect(utils.generateShuffledArray(4)).toEqual([ 2, 0, 1, 3 ]);
+        expect(Utils.generateShuffledArray(4)).toEqual([ 2, 0, 1, 3 ]);
         expect(shuffleMock).toHaveBeenCalledWith([ 0, 1, 2, 3 ]);
 
         shuffleMock.mockRestore();
     });
 
     it('should not change any elements when shuffling an array', () => {
-        const array = utils.shuffleArray([ 1, 3, 5 ]);
+        const array = Utils.shuffleArray([ 1, 3, 5 ]);
 
         expect(array).toHaveLength(3);
         expect(array).toContain(1);
@@ -63,10 +61,10 @@ describe('Util', () => {
     });
 
     it('should check for ending punctuation', () => {
-        expect(utils.endsWithPunc('This is a test.')).toBe(true);
-        expect(utils.endsWithPunc('This is a test!')).toBe(true);
-        expect(utils.endsWithPunc('This is a test?')).toBe(true);
-        expect(utils.endsWithPunc('This is a test')).toBe(false);
+        expect(Utils.endsWithPunc('This is a test.')).toBe(true);
+        expect(Utils.endsWithPunc('This is a test!')).toBe(true);
+        expect(Utils.endsWithPunc('This is a test?')).toBe(true);
+        expect(Utils.endsWithPunc('This is a test')).toBe(false);
     });
 
     describe('Logging', () => {
@@ -75,7 +73,7 @@ describe('Util', () => {
         beforeAll(() => {
             logMock = jest.spyOn(console, 'log').mockReturnValue();
             errorMock = jest.spyOn(console, 'error').mockReturnValue();
-            getFormattedTimeMock = jest.spyOn(utils, 'getFormattedTime').mockReturnValue('06/03/2016 08:01:04');
+            getFormattedTimeMock = jest.spyOn(Utils, 'getFormattedTime').mockReturnValue('06/03/2016 08:01:04');
 
             NODE_ENV_SAVE = process.env.NODE_ENV;
             delete process.env.NODE_ENV;
@@ -96,13 +94,13 @@ describe('Util', () => {
         });
 
         it('should display log messages if NODE_ENV is not \'test\'', () => {
-            utils.log('test');
+            Utils.log('test');
             expect(logMock).toHaveBeenCalledTimes(1);
             expect(logMock).toHaveBeenCalledWith('06/03/2016 08:01:04 ' + ' INFO '.black.bgWhite + ' %s', 'test');
         });
 
         it('should display error messages if NODE_ENV is not \'test\'', () => {
-            utils.logError('test');
+            Utils.logError('test');
             expect(errorMock).toHaveBeenCalledTimes(1);
             expect(errorMock).toHaveBeenCalledWith('06/03/2016 08:01:04 ' + ' ERROR '.black.bgRed + ' %s'.red, 'test');
         });
@@ -110,7 +108,7 @@ describe('Util', () => {
         it('should display error messages if NODE_ENV is not \'test\' with an error object', () => {
             const error = { stack: 'error' };
 
-            utils.logError('test', error);
+            Utils.logError('test', error);
             expect(errorMock).toHaveBeenCalledTimes(2);
             expect(errorMock).toHaveBeenCalledWith(
                 '06/03/2016 08:01:04 ' + ' ERROR '.black.bgRed + ' %s'.red, 'test'
@@ -121,13 +119,13 @@ describe('Util', () => {
         });
 
         it('should display debug messages if NODE_ENV is not \'test\' & the debug flag is true', () => {
-            utils.debug = true;
+            Utils.debug = true;
 
-            utils.logDebug('test');
+            Utils.logDebug('test');
             expect(logMock).toHaveBeenCalledTimes(1);
             expect(logMock).toHaveBeenCalledWith('06/03/2016 08:01:04 ' + ' DEBUG '.black.bgCyan + ' %s'.cyan, 'test');
 
-            utils.debug = false;
+            Utils.debug = false;
         });
     });
 
@@ -144,11 +142,11 @@ describe('Util', () => {
             });
 
             it('should generate the proper int representation', () => {
-                expect(utils.getTime()).toBe(201606030801);
+                expect(Utils.getTime()).toBe(201606030801);
             });
 
             it('should generate the proper string representation', () => {
-                expect(utils.getFormattedTime()).toBe('06/03/2016 08:01:04');
+                expect(Utils.getFormattedTime()).toBe('06/03/2016 08:01:04');
             });
         });
 
@@ -158,11 +156,11 @@ describe('Util', () => {
             });
 
             it('should generate the proper int representation', () => {
-                expect(utils.getTime()).toBe(201611231354);
+                expect(Utils.getTime()).toBe(201611231354);
             });
 
             it('should generate the proper string representation', () => {
-                expect(utils.getFormattedTime()).toBe('11/23/2016 13:54:23');
+                expect(Utils.getFormattedTime()).toBe('11/23/2016 13:54:23');
             });
         });
     });

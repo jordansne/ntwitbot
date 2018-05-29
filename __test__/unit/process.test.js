@@ -5,17 +5,24 @@
  */
 
 const Process = require('../../src/process.js');
-const Util    = require('../../src/util.js');
+const Utils   = require('../../src/utils.js');
 
-const processor = new Process(new Util());
+const processor = new Process();
 
 const MOCK_TIME           =  201710302350;
 const MOCK_TIME_FORMATTED = '10/30/2017 23:50:15';
 
 describe('Process', () => {
+    let getTimeMock, getFormattedTimeMock;
+
     beforeAll(() => {
-        processor.utils.getTime = jest.fn(() => MOCK_TIME);
-        processor.utils.getFormattedTime = jest.fn(() => MOCK_TIME_FORMATTED);
+        getTimeMock = jest.spyOn(Utils, 'getTime').mockReturnValue(MOCK_TIME);
+        getFormattedTimeMock = jest.spyOn(Utils, 'getFormattedTime').mockReturnValue(MOCK_TIME_FORMATTED);
+    });
+
+    afterAll(() => {
+        getTimeMock.mockRestore();
+        getFormattedTimeMock.mockRestore();
     });
 
     it('should filter mentions and links from words', () => {

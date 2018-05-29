@@ -6,22 +6,17 @@
  */
 
 const fs = require('fs');
+const Utils = require('./utils.js');
 
 /**
  * Database & IO handler class.
  */
 module.exports = class Data {
 
-    /**
-     * Initialize the class.
-     * @param {Util} utils - The utilities object needed for logging, etc.
-     */
-    constructor(utils) {
+    constructor() {
         this.DATA_DIR = './data';
         this.DATABASE_FILE = this.DATA_DIR + '/db.json';
         this.STATE_FILE = this.DATA_DIR + '/state.json';
-
-        this.utils = utils;
     }
 
     /**
@@ -53,7 +48,7 @@ module.exports = class Data {
             try {
                 data = JSON.parse(rawData);
             } catch (error) {
-                this.utils.logError('I/O: Failed to parse state data');
+                Utils.logError('I/O: Failed to parse state data');
                 throw error;
             }
 
@@ -95,12 +90,12 @@ module.exports = class Data {
             try {
                 return JSON.parse(data);
             } catch (error) {
-                this.utils.logError('I/O: Failed to parse database data');
+                Utils.logError('I/O: Failed to parse database data');
                 throw error;
             }
         }, (error) => {
             if (error.code === 'ENOENT') {
-                this.utils.logError('I/O: No database file found');
+                Utils.logError('I/O: No database file found');
             }
             throw error;
         });
@@ -124,7 +119,7 @@ module.exports = class Data {
             try {
                 return JSON.parse(data);
             } catch (error) {
-                this.utils.logError('I/O: Failed to parse state data');
+                Utils.logError('I/O: Failed to parse state data');
                 throw error;
             }
         }, (error) => {
@@ -146,12 +141,12 @@ module.exports = class Data {
         return new Promise((resolve, reject) => {
             fs.writeFile(filePath, JSON.stringify(data), (error) => {
                 if (error) {
-                    this.utils.logError('I/O: Failed to write data to: ' + filePath);
+                    Utils.logError('I/O: Failed to write data to: ' + filePath);
                     reject(error);
                     return;
                 }
 
-                this.utils.log('I/O: Wrote data to: ' + filePath);
+                Utils.log('I/O: Wrote data to: ' + filePath);
                 resolve();
             });
         });
@@ -174,7 +169,7 @@ module.exports = class Data {
 
                 fs.readFile(filePath, 'utf8', (error, data) => {
                     if (error) {
-                        this.utils.logError('I/O: Failed to read data from: ' + filePath);
+                        Utils.logError('I/O: Failed to read data from: ' + filePath);
                         reject(error);
                         return;
                     }

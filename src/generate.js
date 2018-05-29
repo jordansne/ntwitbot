@@ -5,22 +5,18 @@
  * @license MIT
  */
 
+const Utils = require('./utils.js');
+
 /**
  * Tweet generator class.
  */
 module.exports = class Generate {
 
-    /**
-     * Initialize the class.
-     * @param {Util} utils - The utilities object needed for logging, etc.
-     */
-    constructor(utils) {
+    constructor() {
         // Minimum words for a message
         this.MIN_WORDS = 4;
         // Maximum characters a message can be
         this.MAX_CHARS = 140;
-
-        this.utils = utils;
     }
 
     /**
@@ -95,13 +91,13 @@ module.exports = class Generate {
 
         for (const key in wordDB) {
             if (wordDB.hasOwnProperty(key)) {
-                if (this.utils.isUpperCase(key.charAt(0))) {
+                if (Utils.isUpperCase(key.charAt(0))) {
                     first.push(key);
                 }
             }
         }
 
-        return this.utils.shuffleArray(first);
+        return Utils.shuffleArray(first);
     }
 
     /**
@@ -124,7 +120,7 @@ module.exports = class Generate {
 
             if (nextWords.length > 0) {
                 for (const word of nextWords) {
-                    if (this.utils.endsWithPunc(word)) {
+                    if (Utils.endsWithPunc(word)) {
                         nextMoves.push('FINISH_WITH:' + word);
                     } else {
                         nextMoves.push('ADD_WORD:' + word);
@@ -150,7 +146,7 @@ module.exports = class Generate {
     getRandomWords(wordDB, key) {
         const result = [];
         const numOfWords = wordDB[key].length;
-        const randWordArray = this.utils.generateShuffledArray(numOfWords);
+        const randWordArray = Utils.generateShuffledArray(numOfWords);
 
         // Search for a new word entry that hasn't been popped
         for (let i = 0; i < numOfWords; i++) {
@@ -182,7 +178,7 @@ module.exports = class Generate {
             }
         }
 
-        if (!this.utils.endsWithPunc(result)) {
+        if (!Utils.endsWithPunc(result)) {
             result += '.';
         }
 

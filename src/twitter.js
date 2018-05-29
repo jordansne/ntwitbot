@@ -6,6 +6,7 @@
  */
 
 const TwitterModule = require('twitter');
+const Utils         = require('./utils.js');
 
 /**
  * Twitter API interactor class. Gets data directly from Twitter.
@@ -15,11 +16,9 @@ module.exports = class Twitter {
     /**
      * Initialize the class.
      * @param {Object} secretData - The secret data for the Twitter API.
-     * @param {Util} utils - The utilities object needed for logging, etc.
      */
-    constructor(secretData, utils) {
+    constructor(secretData) {
         this.twitterAPI = new TwitterModule(secretData);
-        this.utils = utils;
     }
 
     /**
@@ -36,7 +35,7 @@ module.exports = class Twitter {
             this.ownID = account.id_str;
             return this.ownID;
         }, (error) => {
-            this.utils.logError('Failed to verify twitter configuration');
+            Utils.logError('Failed to verify twitter configuration');
             throw error;
         });
     }
@@ -59,7 +58,7 @@ module.exports = class Twitter {
         }
 
         return this.postRequest('statuses/update', data).catch((error) => {
-            this.utils.logError('Failed to send tweet');
+            Utils.logError('Failed to send tweet');
             throw error;
         });
     }
@@ -77,7 +76,7 @@ module.exports = class Twitter {
         };
 
         return this.postRequest('direct_messages/new', data).catch((error) => {
-            this.utils.logError('Failed to send Direct Message to: ' + userID);
+            Utils.logError('Failed to send Direct Message to: ' + userID);
             throw error;
         });
     }
@@ -91,7 +90,7 @@ module.exports = class Twitter {
         return this.getRequest('statuses/mentions_timeline', requestData).then((mentions) => {
             return mentions;
         }, (error) => {
-            this.utils.logError('Failed to retrieve mentions from bot');
+            Utils.logError('Failed to retrieve mentions from bot');
             throw error;
         });
     }
@@ -108,7 +107,7 @@ module.exports = class Twitter {
         };
 
         return this.getRequest('friends/ids', data).catch((error) => {
-            this.utils.logError('Failed to retrieve following list of bot');
+            Utils.logError('Failed to retrieve following list of bot');
             throw error;
         });
     }
@@ -120,7 +119,7 @@ module.exports = class Twitter {
      */
     getTweets(requestData) {
         return this.getRequest('statuses/user_timeline', requestData).catch((error) => {
-            this.utils.logError('Failed to retrieve tweets from user: ' + requestData.user_id);
+            Utils.logError('Failed to retrieve tweets from user: ' + requestData.user_id);
             throw error;
         });
     }

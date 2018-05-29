@@ -12,7 +12,7 @@ const Data          = require('./data.js'),
       Process       = require('./process.js'),
       Retrieve      = require('./retrieve.js'),
       Twitter       = require('./twitter.js'),
-      Util          = require('./util.js');
+      Utils         = require('./utils.js');
 
 /**
  * Primary class of the bot. Handles all primary functions.
@@ -30,15 +30,14 @@ module.exports = class Main {
         this.secretData = secretData;
         this.setup = setup;
 
-        this.utils = new Util();
-        this.utils.log('Starting NTwitBot ' + process.env.npm_package_version + '..');
-        this.utils.setDebug(this.setup.debug);
+        Utils.log('Starting NTwitBot ' + process.env.npm_package_version + '..');
+        Utils.setDebug(this.setup.debug);
 
-        this.dataHandler    = new Data(this.utils);
-        this.processor      = new Process(this.utils);
-        this.generator      = new Generate(this.utils);
-        this.twitterHandler = new Twitter(this.secretData, this.utils);
-        this.retriever      = new Retrieve(this.twitterHandler, this.utils);
+        this.dataHandler    = new Data();
+        this.processor      = new Process();
+        this.generator      = new Generate();
+        this.twitterHandler = new Twitter(this.secretData);
+        this.retriever      = new Retrieve(this.twitterHandler);
     }
 
     /**
@@ -47,14 +46,14 @@ module.exports = class Main {
      */
     init() {
         return this.twitterHandler.verify().then((userID) => {
-            this.utils.log('Verified Bot credentials, User ID is: ' + userID);
+            Utils.log('Verified Bot credentials, User ID is: ' + userID);
 
             return this.initState();
         }).then(() => {
             return this.dataHandler.createDataDir();
 
         }).catch((error) => {
-            this.utils.logError('FATAL: Failed to initialize bot', error);
+            Utils.logError('FATAL: Failed to initialize bot', error);
             throw new Error('Initializaion failure');
         });
     }
@@ -94,9 +93,9 @@ module.exports = class Main {
     runUpdate() {
         let updateState = false;
 
-        this.utils.log('');
-        this.utils.log('******************* Running update ******************* ');
-        this.utils.log('');
+        Utils.log('');
+        Utils.log('******************* Running update ******************* ');
+        Utils.log('');
 
         return this.handleTweets().then((newTweets) => {
             if (newTweets) {
@@ -113,7 +112,7 @@ module.exports = class Main {
                 return this.dataHandler.saveState(this.state);
             }
         }, (error) => {
-            this.utils.logError('Failed to handle new mentions (skipping until next update)', error);
+            Utils.logError('Failed to handle new mentions (skipping until next update)', error);
 
         }).then(() => {
             this.sendTweet();
@@ -132,21 +131,21 @@ module.exports = class Main {
             const tweets = this.processRetrievals(retrievals);
 
             if (tweets.length > 0) {
-                this.utils.log('Retrieved tweets: ' + tweets.length + ' tweets to process');
+                Utils.log('Retrieved tweets: ' + tweets.length + ' tweets to process');
                 return this.dataHandler.saveTweetData(this.processor.processTweets(tweets));
             } else {
-                this.utils.log('Retrieved tweets: No tweets to process');
+                Utils.log('Retrieved tweets: No tweets to process');
                 return Promise.reject();
             }
         }, (error) => {
-            this.utils.logError('Failed to retrieve new tweets, skipping until next update', error);
+            Utils.logError('Failed to retrieve new tweets, skipping until next update', error);
             return Promise.reject();
 
         }).then(() => {
             return true;
         }, (error) => {
             if (error) {
-                this.utils.logError('FATAL: Failed to save tweet data in database', error);
+                Utils.logError('FATAL: Failed to save tweet data in database', error);
                 throw new Error('Database error');
             }
 
@@ -196,7 +195,7 @@ module.exports = class Main {
 
             // Remove any trackedUsers that the bot is no longer following
             for (const user in this.state.trackedUsers) {
-                if (!this.utils.isInArray(ids, user)) {
+                if (!Utils.isInArray(ids, user)) {
                     delete this.state.trackedUsers[user];
                 }
             }
@@ -212,7 +211,7 @@ module.exports = class Main {
             const tweetsToSend = [];
 
             if (mentions.length > 0) {
-                this.utils.log('Retrieved mentions: ' + mentions.length + ' new tweets found');
+                Utils.log('Retrieved mentions: ' + mentions.length + ' new tweets found');
 
                 for (const mention of mentions) {
                     tweetsToSend.push({
@@ -228,11 +227,11 @@ module.exports = class Main {
 
                 return true;
             } else {
-                this.utils.log('Retrieved mentions: No new tweets found');
+                Utils.log('Retrieved mentions: No new tweets found');
                 return false;
             }
         }, (error) => {
-            this.utils.logError('Failed to retrieve new mentions (skipping)', error);
+            Utils.logError('Failed to retrieve new mentions (skipping)', error);
         });
     }
 
@@ -247,14 +246,14 @@ module.exports = class Main {
             const tweet = this.generator.generateTweet(data);
 
             return this.twitterHandler.postTweet(tweet, replyID, replyUser).then(() => {
-                this.utils.log('Generated & sent tweet: ' + tweet);
+                Utils.log('Generated & sent tweet: ' + tweet);
             }, (error) => {
-                this.utils.logError('Failed to send tweet: Posting tweet (skipping)', error);
+                Utils.logError('Failed to send tweet: Posting tweet (skipping)', error);
                 // TODO Determine if retryable and retry/exit depending on result
             });
 
         }, (error) => {
-            this.utils.logError('FATAL: Failed to send tweet: Database error', error);
+            Utils.logError('FATAL: Failed to send tweet: Database error', error);
             throw new Error('Database error');
         });
     }

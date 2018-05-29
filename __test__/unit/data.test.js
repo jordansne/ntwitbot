@@ -8,9 +8,7 @@ jest.mock('fs');
 const fsMock = require('fs');
 
 const Data = require('../../src/data.js');
-const Util = require('../../src/util.js');
-
-const dataHandler = new Data(new Util());
+const dataHandler = new Data();
 
 describe('Data', () => {
     afterAll(() => {
