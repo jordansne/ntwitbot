@@ -63,7 +63,7 @@ describe('Main', () => {
             readStateMock.mockRestore();
         });
 
-        it('set the saved state if a state file does exist', () => {
+        it('should set the saved state if a state file does exist', () => {
             const state = { trackedUsers: { '001': '5001' }, lastMention: 5003 };
             readStateMock.mockReturnValue(Promise.resolve(state));
 
@@ -74,7 +74,7 @@ describe('Main', () => {
             });
         });
 
-        it('set a blank state if a state file does not exist', () => {
+        it('should set a blank state if a state file does not exist', () => {
             readStateMock.mockReturnValue(Promise.resolve(null));
 
             expect.assertions(2);
