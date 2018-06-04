@@ -34,8 +34,8 @@ describe('Utils', () => {
         const otherObject1 = { id: 3232 };
         const otherObject2 = { id: 4322 };
 
-        const array1 = [someObject, otherObject1];
-        const array2 = [otherObject1, otherObject2];
+        const array1 = [ someObject, otherObject1 ];
+        const array2 = [ otherObject1, otherObject2 ];
 
         expect(Utils.isInArray(array1, someObject)).toBe(true);
         expect(Utils.isInArray(array2, someObject)).toBe(false);
@@ -43,7 +43,7 @@ describe('Utils', () => {
 
     it('should generate shuffled arrays', () => {
         const shuffleMock = jest.spyOn(Utils, 'shuffleArray')
-            .mockReturnValueOnce([2, 0, 1, 3 ]);
+            .mockReturnValueOnce([ 2, 0, 1, 3 ]);
 
         expect(Utils.generateShuffledArray(4)).toEqual([ 2, 0, 1, 3 ]);
         expect(shuffleMock).toHaveBeenCalledWith([ 0, 1, 2, 3 ]);

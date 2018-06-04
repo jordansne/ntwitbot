@@ -5,7 +5,7 @@
  * @license MIT
  */
 
- const Utils = require('./utils.js');
+const Utils = require('./utils.js');
 
 /**
  * Data retriever class. Retrieves and pre-processes data from Twitter.

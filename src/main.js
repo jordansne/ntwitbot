@@ -5,14 +5,14 @@
  * @license MIT
  */
 
-const timers        = require('timers');
+const timers   = require('timers');
 
-const Data          = require('./data.js'),
-      Generate      = require('./generate.js'),
-      Process       = require('./process.js'),
-      Retrieve      = require('./retrieve.js'),
-      Twitter       = require('./twitter.js'),
-      Utils         = require('./utils.js');
+const Data     = require('./data.js');
+const Generate = require('./generate.js');
+const Process  = require('./process.js');
+const Retrieve = require('./retrieve.js');
+const Twitter  = require('./twitter.js');
+const Utils    = require('./utils.js');
 
 /**
  * Primary class of the bot. Handles all primary functions.

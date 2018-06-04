@@ -19,13 +19,12 @@ module.exports = {
         const name = chance.name();
 
         return new Tweet(
-            chance.string({ pool: '1234567890', length: 12}),
+            chance.string({ pool: '1234567890', length: 12 }),
             chance.sentence({ words: 16 }),
-            chance.string({ pool: '1234567890', length: 7}),
+            chance.string({ pool: '1234567890', length: 7 }),
             name.toLowerCase().replace(/\s/g, '')
         ).withName(name);
     },
-
 
     /**
      * Generates an array of multiple random tweets.
@@ -39,9 +38,9 @@ module.exports = {
             const name = chance.name();
 
             tweets.push(new Tweet(
-                chance.string({ pool: '1234567890', length: 12}),
+                chance.string({ pool: '1234567890', length: 12 }),
                 chance.sentence({ words: 16 }),
-                chance.string({ pool: '1234567890', length: 7}),
+                chance.string({ pool: '1234567890', length: 7 }),
                 name.toLowerCase().replace(/\s/g, '')
             ).withName(name).toAPIObject());
         }
@@ -54,7 +53,7 @@ module.exports = {
      * @return {string} A random tweet ID.
      */
     genTweetID() {
-        return chance.string({ pool: '1234567890', length: 15});
+        return chance.string({ pool: '1234567890', length: 15 });
     },
 
     /**
@@ -70,7 +69,7 @@ module.exports = {
      * @return {string} A random user ID.
      */
     genUserID() {
-        return chance.string({ pool: '1234567890', length: 8});
+        return chance.string({ pool: '1234567890', length: 8 });
     },
 
     /**

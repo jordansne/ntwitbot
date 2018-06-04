@@ -401,9 +401,12 @@ describe('Main', () => {
         let readTweetDataMock, generateTweetMock, postTweetMock;
 
         beforeAll(() => {
-            readTweetDataMock = jest.spyOn(main.dataHandler, 'readTweetData').mockReturnValue(Promise.resolve(tweetData));
-            generateTweetMock = jest.spyOn(main.generator, 'generateTweet').mockReturnValue('tweet');
-            postTweetMock = jest.spyOn(main.twitterHandler, 'postTweet').mockReturnValue(Promise.resolve());
+            readTweetDataMock =
+                jest.spyOn(main.dataHandler, 'readTweetData').mockReturnValue(Promise.resolve(tweetData));
+            generateTweetMock =
+                jest.spyOn(main.generator, 'generateTweet').mockReturnValue('tweet');
+            postTweetMock =
+                jest.spyOn(main.twitterHandler, 'postTweet').mockReturnValue(Promise.resolve());
         });
 
         afterEach(() => {
