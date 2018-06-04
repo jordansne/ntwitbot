@@ -25,7 +25,7 @@ class Utils {
      */
     log(message) {
         if (process.env.NODE_ENV !== 'test') {
-            console.log(this.getFormattedTime() + ' ' + ' INFO '.black.bgWhite + ' %s', message);
+            console.log(`${this.getFormattedTime()} ${' INFO '.black.bgWhite} %s`, message);
         }
     }
 
@@ -36,10 +36,10 @@ class Utils {
      */
     logError(message, error) {
         if (process.env.NODE_ENV !== 'test') {
-            console.error(this.getFormattedTime() + ' ' + ' ERROR '.black.bgRed + ' %s'.red, message);
+            console.error(`${this.getFormattedTime()} ${' ERROR '.black.bgRed}${' %s'.red}`, message);
 
             if (error) {
-                console.error(this.getFormattedTime() + ' ' + ' ERROR '.black.bgRed + '     %s'.red, error.stack);
+                console.error(`${this.getFormattedTime()} ${' ERROR '.black.bgRed}${'     %s'.red}`, error.stack);
             }
         }
     }
@@ -50,7 +50,7 @@ class Utils {
      */
     logDebug(message) {
         if (process.env.NODE_ENV !== 'test' && this.debug) {
-            console.log(this.getFormattedTime() + ' ' + ' DEBUG '.black.bgCyan + ' %s'.cyan, message);
+            console.log(`${this.getFormattedTime()} ${' DEBUG '.black.bgCyan}${' %s'.cyan}`, message);
         }
     }
 
@@ -101,19 +101,19 @@ class Utils {
         const date = new Date();
 
         const month = date.getMonth() + 1;
-        result += (month < 10 ? '0' : '') + month + '/';
+        result += `${(month < 10 ? '0' : '') + month}/`;
 
         const day = date.getDate();
-        result += (day < 10 ? '0' : '') + day + '/';
+        result += `${(day < 10 ? '0' : '') + day}/`;
 
         const year = date.getFullYear();
-        result += year + ' ';
+        result += `${year} `;
 
         const hour = date.getHours();
-        result += (hour < 10 ? '0' : '') + hour + ':';
+        result += `${(hour < 10 ? '0' : '') + hour}:`;
 
         const minute = date.getMinutes();
-        result += (minute < 10 ? '0' : '') + minute + ':';
+        result += `${(minute < 10 ? '0' : '') + minute}:`;
 
         const seconds = date.getSeconds();
         result += (seconds < 10 ? '0' : '') + seconds;

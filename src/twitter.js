@@ -54,7 +54,7 @@ module.exports = class Twitter {
 
         if (idToReply) {
             data.in_reply_to_status_id = idToReply;
-            data.status = '@' + userToReply + ' ' + data.status;
+            data.status = `@${userToReply} ${data.status}`;
         }
 
         return this.postRequest('statuses/update', data).catch((error) => {
@@ -76,7 +76,7 @@ module.exports = class Twitter {
         };
 
         return this.postRequest('direct_messages/new', data).catch((error) => {
-            Utils.logError('Failed to send Direct Message to: ' + userID);
+            Utils.logError(`Failed to send Direct Message to: ${userID}`);
             throw error;
         });
     }
@@ -119,7 +119,7 @@ module.exports = class Twitter {
      */
     getTweets(requestData) {
         return this.getRequest('statuses/user_timeline', requestData).catch((error) => {
-            Utils.logError('Failed to retrieve tweets from user: ' + requestData.user_id);
+            Utils.logError(`Failed to retrieve tweets from user: ${requestData.user_id}`);
             throw error;
         });
     }

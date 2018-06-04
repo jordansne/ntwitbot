@@ -21,7 +21,7 @@ module.exports = class Process {
     processTweets(tweets) {
         const newData = {};
 
-        Utils.log('Processing ' + tweets.length + ' new tweets');
+        Utils.log(`Processing ${tweets.length} new tweets`);
 
         // Process tweets
         for (let i = 0; i < tweets.length; i++) {
@@ -50,7 +50,7 @@ module.exports = class Process {
      */
     appendData(data, words) {
         for (let i = 0; i < words.length - 2; i++) {
-            const key = words[i] + ' ' + words[i + 1];
+            const key = `${words[i]} ${words[i + 1]}`;
 
             if (!(key in data)) {
                 // Create a new array for the word pair

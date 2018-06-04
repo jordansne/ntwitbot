@@ -30,9 +30,9 @@ describe('Utils', () => {
     });
 
     it('should check if an object is in an array', () => {
-        const someObject = { 'id': 2322 };
-        const otherObject1 = { 'id': 3232 };
-        const otherObject2 = { 'id': 4322 };
+        const someObject = { id: 2322 };
+        const otherObject1 = { id: 3232 };
+        const otherObject2 = { id: 4322 };
 
         const array1 = [someObject, otherObject1];
         const array2 = [otherObject1, otherObject2];
@@ -96,13 +96,13 @@ describe('Utils', () => {
         it('should display log messages if NODE_ENV is not \'test\'', () => {
             Utils.log('test');
             expect(logMock).toHaveBeenCalledTimes(1);
-            expect(logMock).toHaveBeenCalledWith('06/03/2016 08:01:04 ' + ' INFO '.black.bgWhite + ' %s', 'test');
+            expect(logMock).toHaveBeenCalledWith(`06/03/2016 08:01:04 ${' INFO '.black.bgWhite} %s`, 'test');
         });
 
         it('should display error messages if NODE_ENV is not \'test\'', () => {
             Utils.logError('test');
             expect(errorMock).toHaveBeenCalledTimes(1);
-            expect(errorMock).toHaveBeenCalledWith('06/03/2016 08:01:04 ' + ' ERROR '.black.bgRed + ' %s'.red, 'test');
+            expect(errorMock).toHaveBeenCalledWith(`06/03/2016 08:01:04 ${' ERROR '.black.bgRed}${' %s'.red}`, 'test');
         });
 
         it('should display error messages if NODE_ENV is not \'test\' with an error object', () => {
@@ -111,10 +111,10 @@ describe('Utils', () => {
             Utils.logError('test', error);
             expect(errorMock).toHaveBeenCalledTimes(2);
             expect(errorMock).toHaveBeenCalledWith(
-                '06/03/2016 08:01:04 ' + ' ERROR '.black.bgRed + ' %s'.red, 'test'
+                `06/03/2016 08:01:04 ${' ERROR '.black.bgRed}${' %s'.red}`, 'test'
             );
             expect(errorMock).toHaveBeenCalledWith(
-                '06/03/2016 08:01:04 ' + ' ERROR '.black.bgRed + '     %s'.red, error.stack
+                `06/03/2016 08:01:04 ${' ERROR '.black.bgRed}${'     %s'.red}`, error.stack
             );
         });
 
@@ -123,7 +123,7 @@ describe('Utils', () => {
 
             Utils.logDebug('test');
             expect(logMock).toHaveBeenCalledTimes(1);
-            expect(logMock).toHaveBeenCalledWith('06/03/2016 08:01:04 ' + ' DEBUG '.black.bgCyan + ' %s'.cyan, 'test');
+            expect(logMock).toHaveBeenCalledWith(`06/03/2016 08:01:04 ${' DEBUG '.black.bgCyan}${' %s'.cyan}`, 'test');
 
             Utils.debug = false;
         });

@@ -60,7 +60,7 @@ module.exports = class Tweet {
      * @return {Tweet} Object instance for chaining.
      */
     withDate(weekday, month, day, time, year) {
-        this.date = weekday + ' ' + month + ' ' + day + ' ' + time + ' +0000 ' + year;
+        this.date = `${weekday} ${month} ${day} ${time} +0000 ${year}`;
         return this;
     }
 
@@ -72,8 +72,8 @@ module.exports = class Tweet {
      */
     includingMention(username, userID) {
         this.mentions.push({
-            'id_str': userID,
-            'username': username
+            id_str: userID,
+            username
         });
         return this;
     }
@@ -85,19 +85,19 @@ module.exports = class Tweet {
      */
     toAPIObject() {
         return JSON.parse(JSON.stringify({
-            'created_at': this.date,
-            'text': this.text,
-            'id_str': this.tweetID,
-            'in_reply_to_status_id_str': this.repliedTweetID,
-            'in_reply_to_user_id_str': this.repliedUserID,
-            'in_reply_to_screen_name': this.repliedUsername,
-            'entities': {
-                'user_mentions': this.mentions
+            created_at: this.date,
+            text: this.text,
+            id_str: this.tweetID,
+            in_reply_to_status_id_str: this.repliedTweetID,
+            in_reply_to_user_id_str: this.repliedUserID,
+            in_reply_to_screen_name: this.repliedUsername,
+            entities: {
+                user_mentions: this.mentions
             },
-            'user': {
-                'id_str': this.userID,
-                'name': this.name,
-                'screen_name': this.username
+            user: {
+                id_str: this.userID,
+                name: this.name,
+                screen_name: this.username
             }
         }));
     }

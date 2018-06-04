@@ -15,8 +15,8 @@ module.exports = class Data {
 
     constructor() {
         this.DATA_DIR = './data';
-        this.DATABASE_FILE = this.DATA_DIR + '/db.json';
-        this.STATE_FILE = this.DATA_DIR + '/state.json';
+        this.DATABASE_FILE = `${this.DATA_DIR}/db.json`;
+        this.STATE_FILE = `${this.DATA_DIR}/state.json`;
     }
 
     /**
@@ -141,12 +141,12 @@ module.exports = class Data {
         return new Promise((resolve, reject) => {
             fs.writeFile(filePath, JSON.stringify(data), (error) => {
                 if (error) {
-                    Utils.logError('I/O: Failed to write data to: ' + filePath);
+                    Utils.logError(`I/O: Failed to write data to: ${filePath}`);
                     reject(error);
                     return;
                 }
 
-                Utils.log('I/O: Wrote data to: ' + filePath);
+                Utils.log(`I/O: Wrote data to: ${filePath}`);
                 resolve();
             });
         });
@@ -169,7 +169,7 @@ module.exports = class Data {
 
                 fs.readFile(filePath, 'utf8', (error, data) => {
                     if (error) {
-                        Utils.logError('I/O: Failed to read data from: ' + filePath);
+                        Utils.logError(`I/O: Failed to read data from: ${filePath}`);
                         reject(error);
                         return;
                     }

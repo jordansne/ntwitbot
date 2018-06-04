@@ -77,7 +77,7 @@ module.exports = class Generate {
      * @return {string} The key for the next word.
      */
     keyOf(wordStack) {
-        return wordStack[wordStack.length - 2] + ' ' + wordStack[wordStack.length - 1];
+        return `${wordStack[wordStack.length - 2]} ${wordStack[wordStack.length - 1]}`;
     }
 
     /**
@@ -121,9 +121,9 @@ module.exports = class Generate {
             if (nextWords.length > 0) {
                 for (const word of nextWords) {
                     if (Utils.endsWithPunc(word)) {
-                        nextMoves.push('FINISH_WITH:' + word);
+                        nextMoves.push(`FINISH_WITH:${word}`);
                     } else {
-                        nextMoves.push('ADD_WORD:' + word);
+                        nextMoves.push(`ADD_WORD:${word}`);
                     }
                 }
             } else {
@@ -195,7 +195,7 @@ module.exports = class Generate {
         const numOfWords = wordStack.length;
 
         if (numOfWords >= 3) {
-            const key = wordStack[numOfWords - 3] + ' ' + wordStack[numOfWords - 2];
+            const key = `${wordStack[numOfWords - 3]} ${wordStack[numOfWords - 2]}`;
             const word = wordStack[numOfWords - 1];
 
             this.getWordEntry(wordDB[key], word).beenPopped = true;

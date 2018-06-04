@@ -30,7 +30,7 @@ module.exports = class Main {
         this.secretData = secretData;
         this.setup = setup;
 
-        Utils.log('Starting NTwitBot ' + process.env.npm_package_version + '..');
+        Utils.log(`Starting NTwitBot ${process.env.npm_package_version}..`);
         Utils.setDebug(this.setup.debug);
 
         this.dataHandler    = new Data();
@@ -46,7 +46,7 @@ module.exports = class Main {
      */
     init() {
         return this.twitterHandler.verify().then((userID) => {
-            Utils.log('Verified Bot credentials, User ID is: ' + userID);
+            Utils.log(`Verified Bot credentials, User ID is: ${userID}`);
 
             return this.initState();
         }).then(() => {
@@ -131,7 +131,7 @@ module.exports = class Main {
             const tweets = this.processRetrievals(retrievals);
 
             if (tweets.length > 0) {
-                Utils.log('Retrieved tweets: ' + tweets.length + ' tweets to process');
+                Utils.log(`Retrieved tweets: ${tweets.length} tweets to process`);
                 return this.dataHandler.saveTweetData(this.processor.processTweets(tweets));
             } else {
                 Utils.log('Retrieved tweets: No tweets to process');
@@ -211,7 +211,7 @@ module.exports = class Main {
             const tweetsToSend = [];
 
             if (mentions.length > 0) {
-                Utils.log('Retrieved mentions: ' + mentions.length + ' new tweets found');
+                Utils.log(`Retrieved mentions: ${mentions.length} new tweets found`);
 
                 for (const mention of mentions) {
                     tweetsToSend.push({
@@ -246,7 +246,7 @@ module.exports = class Main {
             const tweet = this.generator.generateTweet(data);
 
             return this.twitterHandler.postTweet(tweet, replyID, replyUser).then(() => {
-                Utils.log('Generated & sent tweet: ' + tweet);
+                Utils.log(`Generated & sent tweet: ${tweet}`);
             }, (error) => {
                 Utils.logError('Failed to send tweet: Posting tweet (skipping)', error);
                 // TODO Determine if retryable and retry/exit depending on result
