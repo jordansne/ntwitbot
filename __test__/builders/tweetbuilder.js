@@ -29,7 +29,7 @@ module.exports = {
     /**
      * Generates an array of multiple random tweets.
      * @param {int} amount - The number of tweets to generate.
-     * @return {Array} An array of random tweets.
+     * @return {Tweet[]} An array of random tweets.
      */
     generateRandomTweets(amount) {
         const tweets = [];
@@ -82,6 +82,7 @@ module.exports = {
 
     /**
      * Generates a random username from a named by removing the spaces.
+     * @param {string} name - The name to convert.
      * @return {string} The converted username.
      */
     toUsername(name) {

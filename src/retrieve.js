@@ -43,7 +43,7 @@ module.exports = class Retrieve {
 
     /**
      * Retrieves and processed new tweets of tracked users.
-     * @param {Dictionary} trackedUsers - The tracked users data from the state.
+     * @param {Object} trackedUsers - The tracked users data from the state.
      * @return {Promise} Resolves with the new tweets.
      */
     retrieveTweets(trackedUsers) {
@@ -71,11 +71,13 @@ module.exports = class Retrieve {
         return Promise.all(tweetRetrievals);
     }
 
+    /* eslint-disable no-param-reassign */
     /**
      * Retrieves new tweets from an existing user. Only specify one argument.
      * @private
      * @param {Object} params - The data to be used for making twitter requests.
-     * @return {Array} Resolves with an array of tweets.
+     * @param {Object[]} [tweetsRetrieved] - Parameter used by recursive call. Leave undefined.
+     * @return {Object[]} Resolves with an array of tweets.
      */
     retrieveForExisting(params, tweetsRetrieved) {
         // Copy object to allow for proper unit testing
@@ -144,6 +146,8 @@ module.exports = class Retrieve {
      * Retrieves new tweets from a newly added user. Only specify one argument.
      * @private
      * @param {Object} params - The data to be used for making twitter requests.
+     * @param {int} [tweetsLeft] - Used by recursive call. Leave undefined.
+     * @param {Object[]} [tweetsRetrieved] - Used by recursive call. Leave undefined.
      * @return {Promise} Resolves with an object (The tweet data and total number of tweets retrieved).
      */
     retrieveForNew(params, tweetsLeft, tweetsRetrieved) {
@@ -216,5 +220,6 @@ module.exports = class Retrieve {
             }
         });
     }
+    /* eslint-enable no-param-reassign */
 
 };

@@ -39,7 +39,7 @@ module.exports = class Data {
     /**
      * Saves new tweet data into the database.
      * @param {Object} newData - The new tweet data to be saved.
-     * @return {Promise} Resolves when done saving data
+     * @return {Promise} Resolves when done saving data.
      */
     saveTweetData(newData) {
         return this.readFile(this.DATABASE_FILE).then((rawData) => {
@@ -67,7 +67,9 @@ module.exports = class Data {
     /**
      * Inserts new data to a data object. Add to the existingData by reference.
      * @private
+     * @param {Object} data - The existing data object.
      * @param {Object} newData - The new tweet data to be saved.
+     * @returns {void}
      */
     insertData(data, newData) {
         for (const key in newData) {

@@ -22,6 +22,7 @@ class Utils {
     /**
      * Logs a normal message to console.
      * @param {string} message - The message to log.
+     * @return {void}
      */
     log(message) {
         if (process.env.NODE_ENV !== 'test') {
@@ -33,6 +34,7 @@ class Utils {
      * Logs an error message to console.
      * @param {string} message - The message to log.
      * @param {Error} [error] - An optional Error object to log the details of.
+     * @return {void}
      */
     logError(message, error) {
         if (process.env.NODE_ENV !== 'test') {
@@ -47,6 +49,7 @@ class Utils {
     /**
      * Logs a debug message to console.
      * @param {string} message - The message to log.
+     * @return {void}
      */
     logDebug(message) {
         if (process.env.NODE_ENV !== 'test' && this.debug) {
@@ -57,6 +60,7 @@ class Utils {
     /**
      * Sets the debug flag for logging.
      * @param {boolean} debug - The new status of the debug flag.
+     * @return {void}
      */
     setDebug(debug) {
         this.debug = debug;

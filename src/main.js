@@ -78,6 +78,7 @@ module.exports = class Main {
 
     /**
      * Starts the event handler.
+     * @returns {void}
      */
     start() {
         this.runUpdate();
@@ -89,6 +90,7 @@ module.exports = class Main {
 
     /**
      * Scheduled 15 min interval bot update.
+     * @returns {void}
      */
     runUpdate() {
         let updateState = false;
@@ -156,8 +158,8 @@ module.exports = class Main {
     /**
      * Combines tweet retrievals to a single array of tweets and updates the state.
      * @private
-     * @param {2D Array} retrievals - An array of tweet retrievals (array).
-     * @return {Array} The array of all received tweets.
+     * @param {Object[]} retrievals - An array of tweet retrievals (array).
+     * @return {Object[]} The array of all received tweets.
      */
     processRetrievals(retrievals) {
         const tweets = [];

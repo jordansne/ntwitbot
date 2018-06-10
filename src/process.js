@@ -15,7 +15,7 @@ module.exports = class Process {
 
     /**
      * Process tracked tweets of the bot and returns the data.
-     * @param {Array} tweets - The array of tweets in strings to be processed.
+     * @param {Object[]} tweets - The array of tweets in strings to be processed.
      * @return {Object} The processed tweet data.
      */
     processTweets(tweets) {
@@ -46,7 +46,8 @@ module.exports = class Process {
      * Appends words to the data object. Edits the data object by reference.
      * @private
      * @param {Object} data - The object of tweet data.
-     * @param {Array} words - An array of words to be added the data object.
+     * @param {string[]} words - An array of words to be added the data object.
+     * @returns {void}
      */
     appendData(data, words) {
         for (let i = 0; i < words.length - 2; i++) {
@@ -71,8 +72,8 @@ module.exports = class Process {
     /**
      * Removes usernames and links from an array of words.
      * @private
-     * @param {Array} words - The array of words to filter through.
-     * @return {Array} The array after removing the filtered words.
+     * @param {string[]} words - The array of words to filter through.
+     * @return {string[]} The array after removing the filtered words.
      */
     filterWords(words) {
         const filteredWords = [];
@@ -91,7 +92,8 @@ module.exports = class Process {
     /**
      * Converts all words to lowercase. Edits the words array by reference.
      * @private
-     * @param {Array} words - The array of words to convert to lowercase
+     * @param {string[]} words - The array of words to convert to lowercase
+     * @returns {void}
      */
     convertToLowercase(words) {
         for (let i = 0; i < words.length; i++) {
@@ -102,7 +104,8 @@ module.exports = class Process {
     /**
      * Capitalizes beginning of tweet and senetences. Edits the words array by reference.
      * @private
-     * @param {Array} words - The array of words to capitalize.
+     * @param {string[]} words - The array of words to capitalize.
+     * @returns {void}
      */
     capitalizeSentences(words) {
         // Capitalize the first word
@@ -119,7 +122,8 @@ module.exports = class Process {
     /**
      * Appends a period to the end of tweet if not present. Edits the words array by reference.
      * @private
-     * @param {Array} words - The array of words to append to.
+     * @param {string[]} words - The array of words to append to.
+     * @returns {void}
      */
     appendPeriod(words) {
         let lastWord = words[words.length - 1];
