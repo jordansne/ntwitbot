@@ -11,7 +11,7 @@ const Utils = require('./utils.js');
 /**
  * Database & IO handler class.
  */
-module.exports = class Data {
+class Data {
 
     constructor() {
         this.DATA_DIR = './data';
@@ -182,4 +182,6 @@ module.exports = class Data {
         });
     }
 
-};
+}
+
+module.exports = Data;

@@ -11,7 +11,7 @@ const Utils         = require('./utils.js');
 /**
  * Twitter API interactor class. Gets data directly from Twitter.
  */
-module.exports = class Twitter {
+class Twitter {
 
     /**
      * Initialize the class.
@@ -162,4 +162,6 @@ module.exports = class Twitter {
         });
     }
 
-};
+}
+
+module.exports = Twitter;

@@ -17,7 +17,7 @@ const Utils    = require('./utils.js');
 /**
  * Primary class of the bot. Handles all primary functions.
  */
-module.exports = class Main {
+class Main {
 
     /**
      * Initialize bot modules.
@@ -260,4 +260,6 @@ module.exports = class Main {
         });
     }
 
-};
+}
+
+module.exports = Main;

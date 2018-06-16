@@ -10,7 +10,7 @@ const Utils = require('./utils.js');
 /**
  * Tweet generator class.
  */
-module.exports = class Generate {
+class Generate {
 
     constructor() {
         // Minimum words for a message
@@ -222,4 +222,6 @@ module.exports = class Generate {
         return null;
     }
 
-};
+}
+
+module.exports = Generate;

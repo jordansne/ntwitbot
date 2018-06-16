@@ -11,7 +11,7 @@ const Utils    = require('./utils.js');
 /**
  * Tweet processor class. Processes new tweet data & saves it in the database.
  */
-module.exports = class Process {
+class Process {
 
     /**
      * Process tracked tweets of the bot and returns the data.
@@ -133,4 +133,6 @@ module.exports = class Process {
         }
     }
 
-};
+}
+
+module.exports = Process;

@@ -10,7 +10,7 @@ const Utils = require('./utils.js');
 /**
  * Data retriever class. Retrieves and pre-processes data from Twitter.
  */
-module.exports = class Retrieve {
+class Retrieve {
 
     /**
      * Initialize the class.
@@ -222,4 +222,6 @@ module.exports = class Retrieve {
     }
     /* eslint-enable no-param-reassign */
 
-};
+}
+
+module.exports = Retrieve;
