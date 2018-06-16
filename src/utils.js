@@ -22,10 +22,11 @@ class Utils {
     /**
      * Logs a normal message to console.
      * @param {string} message - The message to log.
+     * @return {void}
      */
     log(message) {
         if (process.env.NODE_ENV !== 'test') {
-            console.log(this.getFormattedTime() + ' ' + ' INFO '.black.bgWhite + ' %s', message);
+            console.log(`${this.getFormattedTime()} ${' INFO '.black.bgWhite} %s`, message);
         }
     }
 
@@ -33,13 +34,14 @@ class Utils {
      * Logs an error message to console.
      * @param {string} message - The message to log.
      * @param {Error} [error] - An optional Error object to log the details of.
+     * @return {void}
      */
     logError(message, error) {
         if (process.env.NODE_ENV !== 'test') {
-            console.error(this.getFormattedTime() + ' ' + ' ERROR '.black.bgRed + ' %s'.red, message);
+            console.error(`${this.getFormattedTime()} ${' ERROR '.black.bgRed}${' %s'.red}`, message);
 
             if (error) {
-                console.error(this.getFormattedTime() + ' ' + ' ERROR '.black.bgRed + '     %s'.red, error.stack);
+                console.error(`${this.getFormattedTime()} ${' ERROR '.black.bgRed}${'     %s'.red}`, error.stack);
             }
         }
     }
@@ -47,16 +49,18 @@ class Utils {
     /**
      * Logs a debug message to console.
      * @param {string} message - The message to log.
+     * @return {void}
      */
     logDebug(message) {
         if (process.env.NODE_ENV !== 'test' && this.debug) {
-            console.log(this.getFormattedTime() + ' ' + ' DEBUG '.black.bgCyan + ' %s'.cyan, message);
+            console.log(`${this.getFormattedTime()} ${' DEBUG '.black.bgCyan}${' %s'.cyan}`, message);
         }
     }
 
     /**
      * Sets the debug flag for logging.
      * @param {boolean} debug - The new status of the debug flag.
+     * @return {void}
      */
     setDebug(debug) {
         this.debug = debug;
@@ -101,19 +105,19 @@ class Utils {
         const date = new Date();
 
         const month = date.getMonth() + 1;
-        result += (month < 10 ? '0' : '') + month + '/';
+        result += `${(month < 10 ? '0' : '') + month}/`;
 
         const day = date.getDate();
-        result += (day < 10 ? '0' : '') + day + '/';
+        result += `${(day < 10 ? '0' : '') + day}/`;
 
         const year = date.getFullYear();
-        result += year + ' ';
+        result += `${year} `;
 
         const hour = date.getHours();
-        result += (hour < 10 ? '0' : '') + hour + ':';
+        result += `${(hour < 10 ? '0' : '') + hour}:`;
 
         const minute = date.getMinutes();
-        result += (minute < 10 ? '0' : '') + minute + ':';
+        result += `${(minute < 10 ? '0' : '') + minute}:`;
 
         const seconds = date.getSeconds();
         result += (seconds < 10 ? '0' : '') + seconds;
@@ -136,7 +140,7 @@ class Utils {
      * @return {boolean} True if the character is upper case.
      */
     isUpperCase(char) {
-        return char == char.toUpperCase();
+        return char === char.toUpperCase();
     }
 
     /**
@@ -155,7 +159,7 @@ class Utils {
      * @return {Array} The randomly shuffled array.
      */
     generateShuffledArray(n) {
-        let array = [];
+        const array = [];
 
         // Initialize the array
         for (let i = 0; i < n; i++) {

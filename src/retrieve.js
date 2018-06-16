@@ -5,12 +5,12 @@
  * @license MIT
  */
 
- const Utils = require('./utils.js');
+const Utils = require('./utils.js');
 
 /**
  * Data retriever class. Retrieves and pre-processes data from Twitter.
  */
-module.exports = class Retrieve {
+class Retrieve {
 
     /**
      * Initialize the class.
@@ -36,14 +36,12 @@ module.exports = class Retrieve {
             mentionData.count = 200;
         }
 
-        return this.twitterHandler.getMentions(mentionData).then((mentions) => {
-            return mentions;
-        });
+        return this.twitterHandler.getMentions(mentionData);
     }
 
     /**
      * Retrieves and processed new tweets of tracked users.
-     * @param {Dictionary} trackedUsers - The tracked users data from the state.
+     * @param {Object} trackedUsers - The tracked users data from the state.
      * @return {Promise} Resolves with the new tweets.
      */
     retrieveTweets(trackedUsers) {
@@ -71,11 +69,13 @@ module.exports = class Retrieve {
         return Promise.all(tweetRetrievals);
     }
 
+    /* eslint-disable no-param-reassign */
     /**
      * Retrieves new tweets from an existing user. Only specify one argument.
      * @private
      * @param {Object} params - The data to be used for making twitter requests.
-     * @return {Array} Resolves with an array of tweets.
+     * @param {Object[]} [tweetsRetrieved] - Parameter used by recursive call. Leave undefined.
+     * @return {Object[]} Resolves with an array of tweets.
      */
     retrieveForExisting(params, tweetsRetrieved) {
         // Copy object to allow for proper unit testing
@@ -85,7 +85,7 @@ module.exports = class Retrieve {
         // Initialize recursive variables
         if (firstReq) {
             tweetsRetrieved = [];
-            Utils.log('Retrieving most recent tweets from user with ID: "' + request.user_id + '"');
+            Utils.log(`Retrieving most recent tweets from user with ID: "${request.user_id}"`);
         }
 
         return this.twitterHandler.getTweets(request).then((tweets) => {
@@ -104,11 +104,11 @@ module.exports = class Retrieve {
 
             // If the max ID from the request is the oldest tweet in the request (i.e. only one tweet returned)
             // or only one tweet was found on the first request..
-            if (request.max_id === tweets[tweets.length - 1].id_str || firstReq && tweets.length === 1) {
+            if (request.max_id === tweets[tweets.length - 1].id_str || (firstReq && tweets.length === 1)) {
                 tweetsRetrieved.push(tweets[0]);
 
                 Utils.log('    Retrieved 1 tweet');
-                Utils.log('    Finished retrieving ' + tweetsRetrieved.length + ' tweets');
+                Utils.log(`    Finished retrieving ${tweetsRetrieved.length} tweets`);
 
                 return {
                     done: true,
@@ -120,7 +120,7 @@ module.exports = class Retrieve {
                 tweetsRetrieved.push(tweets[i]);
             }
 
-            Utils.log('    Retrieved ' + numRetrieved + ' tweets');
+            Utils.log(`    Retrieved ${numRetrieved} tweets`);
 
             // Set the max ID of the next request to the oldest tweet in the previous request
             const nextRequest = Object.assign({}, request);
@@ -129,7 +129,7 @@ module.exports = class Retrieve {
             return {
                 done: false,
                 request: nextRequest,
-                tweetsRetrieved: tweetsRetrieved
+                tweetsRetrieved
             };
         }).then((next) => {
             if (!next.done) {
@@ -144,6 +144,8 @@ module.exports = class Retrieve {
      * Retrieves new tweets from a newly added user. Only specify one argument.
      * @private
      * @param {Object} params - The data to be used for making twitter requests.
+     * @param {int} [tweetsLeft] - Used by recursive call. Leave undefined.
+     * @param {Object[]} [tweetsRetrieved] - Used by recursive call. Leave undefined.
      * @return {Promise} Resolves with an object (The tweet data and total number of tweets retrieved).
      */
     retrieveForNew(params, tweetsLeft, tweetsRetrieved) {
@@ -156,8 +158,8 @@ module.exports = class Retrieve {
             tweetsLeft = this.TWEETS_TO_TRACK;
             tweetsRetrieved = [];
 
-            Utils.log('New user with ID: "' + request.user_id + '" added');
-            Utils.log('    Retrieving most recent ' + this.TWEETS_TO_TRACK + ' tweets');
+            Utils.log(`New user with ID: "${request.user_id}" added`);
+            Utils.log(`    Retrieving most recent ${this.TWEETS_TO_TRACK} tweets`);
         }
 
         return this.twitterHandler.getTweets(request).then((tweets) => {
@@ -167,7 +169,7 @@ module.exports = class Retrieve {
             if (request.max_id === tweets[tweets.length - 1].id_str) {
                 tweetsRetrieved.push(tweets[0]);
 
-                Utils.log('    Retrieved ' + tweetsRetrieved.length + '/' + this.TWEETS_TO_TRACK + ' tweets');
+                Utils.log(`    Retrieved ${tweetsRetrieved.length}/${this.TWEETS_TO_TRACK} tweets`);
                 Utils.log('    Reached twitter\'s max tweet retrieval limit.');
                 Utils.log('    Finished retrieving tweets');
 
@@ -183,7 +185,7 @@ module.exports = class Retrieve {
                     tweetsRetrieved.push(tweets[i]);
                 }
 
-                Utils.log('    Retrieved ' + tweetsRetrieved.length + '/' + this.TWEETS_TO_TRACK + ' tweets');
+                Utils.log(`    Retrieved ${tweetsRetrieved.length}/${this.TWEETS_TO_TRACK} tweets`);
                 Utils.log('    Finished retrieving tweets');
                 return {
                     done: true,
@@ -196,7 +198,7 @@ module.exports = class Retrieve {
             }
             tweetsLeft -= numRetrieved;
 
-            Utils.log('    Retrieved ' + tweetsRetrieved.length + '/' + this.TWEETS_TO_TRACK + ' tweets');
+            Utils.log(`    Retrieved ${tweetsRetrieved.length}/${this.TWEETS_TO_TRACK} tweets`);
 
             // Set newest ID for next request to oldest ID of the previous request
             const nextRequest = Object.assign({}, request);
@@ -205,8 +207,8 @@ module.exports = class Retrieve {
             return {
                 done: false,
                 request: nextRequest,
-                tweetsLeft: tweetsLeft,
-                tweetsRetrieved: tweetsRetrieved
+                tweetsLeft,
+                tweetsRetrieved
             };
         }).then((next) => {
             if (!next.done) {
@@ -216,5 +218,8 @@ module.exports = class Retrieve {
             }
         });
     }
+    /* eslint-enable no-param-reassign */
 
-};
+}
+
+module.exports = Retrieve;

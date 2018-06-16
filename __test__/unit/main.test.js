@@ -63,7 +63,7 @@ describe('Main', () => {
             readStateMock.mockRestore();
         });
 
-        it('set the saved state if a state file does exist', () => {
+        it('should set the saved state if a state file does exist', () => {
             const state = { trackedUsers: { '001': '5001' }, lastMention: 5003 };
             readStateMock.mockReturnValue(Promise.resolve(state));
 
@@ -74,7 +74,7 @@ describe('Main', () => {
             });
         });
 
-        it('set a blank state if a state file does not exist', () => {
+        it('should set a blank state if a state file does not exist', () => {
             readStateMock.mockReturnValue(Promise.resolve(null));
 
             expect.assertions(2);
@@ -401,9 +401,12 @@ describe('Main', () => {
         let readTweetDataMock, generateTweetMock, postTweetMock;
 
         beforeAll(() => {
-            readTweetDataMock = jest.spyOn(main.dataHandler, 'readTweetData').mockReturnValue(Promise.resolve(tweetData));
-            generateTweetMock = jest.spyOn(main.generator, 'generateTweet').mockReturnValue('tweet');
-            postTweetMock = jest.spyOn(main.twitterHandler, 'postTweet').mockReturnValue(Promise.resolve());
+            readTweetDataMock =
+                jest.spyOn(main.dataHandler, 'readTweetData').mockReturnValue(Promise.resolve(tweetData));
+            generateTweetMock =
+                jest.spyOn(main.generator, 'generateTweet').mockReturnValue('tweet');
+            postTweetMock =
+                jest.spyOn(main.twitterHandler, 'postTweet').mockReturnValue(Promise.resolve());
         });
 
         afterEach(() => {

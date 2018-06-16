@@ -10,7 +10,7 @@ const Utils = require('./utils.js');
 /**
  * Tweet generator class.
  */
-module.exports = class Generate {
+class Generate {
 
     constructor() {
         // Minimum words for a message
@@ -34,7 +34,6 @@ module.exports = class Generate {
             wordStack = firstWords[firstWord].split(' ').slice(0);
 
             // Construct the rest of the tweet
-            /* eslint no-constant-condition: 'off' */
             while (true) {
                 const nextMoves = this.getPossibleMoves(wordDB, wordStack);
 
@@ -73,18 +72,18 @@ module.exports = class Generate {
     /**
      * Returns the key for the next word to be added to the wordStack.
      * @private
-     * @param {Stack} wordStack - The stack of words for the tweet.
+     * @param {string[]} wordStack - The stack of words for the tweet.
      * @return {string} The key for the next word.
      */
     keyOf(wordStack) {
-        return wordStack[wordStack.length - 2] + ' ' + wordStack[wordStack.length - 1];
+        return `${wordStack[wordStack.length - 2]} ${wordStack[wordStack.length - 1]}`;
     }
 
     /**
      * Get a list of possible first words.
      * @private
      * @param {Object} wordDB - The database object of tweets.
-     * @return {Array} A shuffled array of possible first words.
+     * @return {string[]} A shuffled array of possible first words.
      */
     getFirstWords(wordDB) {
         const first = [];
@@ -104,8 +103,8 @@ module.exports = class Generate {
      * Generates an array with all possible next moves in the tweet generation.
      * @private
      * @param {Object} wordDB - The database object of tweets.
-     * @param {Stack} wordStack - The stack of words for the tweet.
-     * @return {Array} An array of possible moves.
+     * @param {string[]} wordStack - The stack of words for the tweet.
+     * @return {string[]} An array of possible moves.
      */
     getPossibleMoves(wordDB, wordStack) {
         const nextMoves = [];
@@ -121,9 +120,9 @@ module.exports = class Generate {
             if (nextWords.length > 0) {
                 for (const word of nextWords) {
                     if (Utils.endsWithPunc(word)) {
-                        nextMoves.push('FINISH_WITH:' + word);
+                        nextMoves.push(`FINISH_WITH:${word}`);
                     } else {
-                        nextMoves.push('ADD_WORD:' + word);
+                        nextMoves.push(`ADD_WORD:${word}`);
                     }
                 }
             } else {
@@ -164,7 +163,7 @@ module.exports = class Generate {
     /**
      * Compiles the word stack into a single string.
      * @private
-     * @param {Stack} wordStack - The stack of words for the tweet.
+     * @param {string[]} wordStack - The stack of words for the tweet.
      * @return {string} The compiled string.
      */
     compileMessage(wordStack) {
@@ -188,14 +187,15 @@ module.exports = class Generate {
     /**
      * Pops the last word or the only two words off the stack and marks the entries as beenPopped.
      * @private
-     * @param {Stack} wordStack - Current array of strings (words).
+     * @param {string[]} wordStack - Current array of strings (words).
      * @param {Object} wordDB - The database object of tweets.
+     * @returns {void}
      */
     popWord(wordStack, wordDB) {
         const numOfWords = wordStack.length;
 
         if (numOfWords >= 3) {
-            const key = wordStack[numOfWords - 3] + ' ' + wordStack[numOfWords - 2];
+            const key = `${wordStack[numOfWords - 3]} ${wordStack[numOfWords - 2]}`;
             const word = wordStack[numOfWords - 1];
 
             this.getWordEntry(wordDB[key], word).beenPopped = true;
@@ -208,7 +208,7 @@ module.exports = class Generate {
     /**
      * Returns the entry where the word attribute is equal to the specified word parameter.
      * @private
-     * @param {Array} entryList - The array of database entries.
+     * @param {Object[]} entryList - The array of database entries.
      * @param {string} word - The word to search for.
      * @return {Object} The entry that contains the word. Null if not found.
      */
@@ -222,4 +222,6 @@ module.exports = class Generate {
         return null;
     }
 
-};
+}
+
+module.exports = Generate;

@@ -19,18 +19,17 @@ module.exports = {
         const name = chance.name();
 
         return new Tweet(
-            chance.string({ pool: '1234567890', length: 12}),
+            chance.string({ pool: '1234567890', length: 12 }),
             chance.sentence({ words: 16 }),
-            chance.string({ pool: '1234567890', length: 7}),
+            chance.string({ pool: '1234567890', length: 7 }),
             name.toLowerCase().replace(/\s/g, '')
         ).withName(name);
     },
 
-
     /**
      * Generates an array of multiple random tweets.
      * @param {int} amount - The number of tweets to generate.
-     * @return {Array} An array of random tweets.
+     * @return {Tweet[]} An array of random tweets.
      */
     generateRandomTweets(amount) {
         const tweets = [];
@@ -39,9 +38,9 @@ module.exports = {
             const name = chance.name();
 
             tweets.push(new Tweet(
-                chance.string({ pool: '1234567890', length: 12}),
+                chance.string({ pool: '1234567890', length: 12 }),
                 chance.sentence({ words: 16 }),
-                chance.string({ pool: '1234567890', length: 7}),
+                chance.string({ pool: '1234567890', length: 7 }),
                 name.toLowerCase().replace(/\s/g, '')
             ).withName(name).toAPIObject());
         }
@@ -54,7 +53,7 @@ module.exports = {
      * @return {string} A random tweet ID.
      */
     genTweetID() {
-        return chance.string({ pool: '1234567890', length: 15});
+        return chance.string({ pool: '1234567890', length: 15 });
     },
 
     /**
@@ -70,7 +69,7 @@ module.exports = {
      * @return {string} A random user ID.
      */
     genUserID() {
-        return chance.string({ pool: '1234567890', length: 8});
+        return chance.string({ pool: '1234567890', length: 8 });
     },
 
     /**
@@ -83,6 +82,7 @@ module.exports = {
 
     /**
      * Generates a random username from a named by removing the spaces.
+     * @param {string} name - The name to convert.
      * @return {string} The converted username.
      */
     toUsername(name) {

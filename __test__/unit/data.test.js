@@ -90,7 +90,7 @@ describe('Data', () => {
         });
 
         it('should properly save data with Node\'s fs', () => {
-            const data = { 'test': 'value' };
+            const data = { test: 'value' };
             fsMock.writeFile.mockImplementationOnce((path, data, cb) => {
                 cb();
             });
@@ -188,7 +188,7 @@ describe('Data', () => {
         });
 
         it('should properly read data with Node\'s fs', () => {
-            const dataMock = { 'test': 'value' };
+            const dataMock = { test: 'value' };
             fsMock.stat.mockImplementationOnce((path, cb) => {
                 cb();
             });

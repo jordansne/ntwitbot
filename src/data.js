@@ -11,12 +11,12 @@ const Utils = require('./utils.js');
 /**
  * Database & IO handler class.
  */
-module.exports = class Data {
+class Data {
 
     constructor() {
         this.DATA_DIR = './data';
-        this.DATABASE_FILE = this.DATA_DIR + '/db.json';
-        this.STATE_FILE = this.DATA_DIR + '/state.json';
+        this.DATABASE_FILE = `${this.DATA_DIR}/db.json`;
+        this.STATE_FILE = `${this.DATA_DIR}/state.json`;
     }
 
     /**
@@ -39,7 +39,7 @@ module.exports = class Data {
     /**
      * Saves new tweet data into the database.
      * @param {Object} newData - The new tweet data to be saved.
-     * @return {Promise} Resolves when done saving data
+     * @return {Promise} Resolves when done saving data.
      */
     saveTweetData(newData) {
         return this.readFile(this.DATABASE_FILE).then((rawData) => {
@@ -67,7 +67,9 @@ module.exports = class Data {
     /**
      * Inserts new data to a data object. Add to the existingData by reference.
      * @private
+     * @param {Object} data - The existing data object.
      * @param {Object} newData - The new tweet data to be saved.
+     * @returns {void}
      */
     insertData(data, newData) {
         for (const key in newData) {
@@ -141,12 +143,12 @@ module.exports = class Data {
         return new Promise((resolve, reject) => {
             fs.writeFile(filePath, JSON.stringify(data), (error) => {
                 if (error) {
-                    Utils.logError('I/O: Failed to write data to: ' + filePath);
+                    Utils.logError(`I/O: Failed to write data to: ${filePath}`);
                     reject(error);
                     return;
                 }
 
-                Utils.log('I/O: Wrote data to: ' + filePath);
+                Utils.log(`I/O: Wrote data to: ${filePath}`);
                 resolve();
             });
         });
@@ -169,7 +171,7 @@ module.exports = class Data {
 
                 fs.readFile(filePath, 'utf8', (error, data) => {
                     if (error) {
-                        Utils.logError('I/O: Failed to read data from: ' + filePath);
+                        Utils.logError(`I/O: Failed to read data from: ${filePath}`);
                         reject(error);
                         return;
                     }
@@ -180,4 +182,6 @@ module.exports = class Data {
         });
     }
 
-};
+}
+
+module.exports = Data;

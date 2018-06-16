@@ -5,19 +5,19 @@
  * @license MIT
  */
 
-const timers        = require('timers');
+const timers   = require('timers');
 
-const Data          = require('./data.js'),
-      Generate      = require('./generate.js'),
-      Process       = require('./process.js'),
-      Retrieve      = require('./retrieve.js'),
-      Twitter       = require('./twitter.js'),
-      Utils         = require('./utils.js');
+const Data     = require('./data.js');
+const Generate = require('./generate.js');
+const Process  = require('./process.js');
+const Retrieve = require('./retrieve.js');
+const Twitter  = require('./twitter.js');
+const Utils    = require('./utils.js');
 
 /**
  * Primary class of the bot. Handles all primary functions.
  */
-module.exports = class Main {
+class Main {
 
     /**
      * Initialize bot modules.
@@ -25,12 +25,13 @@ module.exports = class Main {
      * @param {Object} setup - The setup object from the config.
      */
     constructor(secretData, setup) {
-        this.TWEET_INTERVAL = 15 /*min*/ * 60 /*s*/ * 1000 /*ms*/;
+        // 15 minutes
+        this.TWEET_INTERVAL = 15 * 60 * 1000;
 
         this.secretData = secretData;
         this.setup = setup;
 
-        Utils.log('Starting NTwitBot ' + process.env.npm_package_version + '..');
+        Utils.log(`Starting NTwitBot ${process.env.npm_package_version}..`);
         Utils.setDebug(this.setup.debug);
 
         this.dataHandler    = new Data();
@@ -46,13 +47,12 @@ module.exports = class Main {
      */
     init() {
         return this.twitterHandler.verify().then((userID) => {
-            Utils.log('Verified Bot credentials, User ID is: ' + userID);
+            Utils.log(`Verified Bot credentials, User ID is: ${userID}`);
 
             return this.initState();
-        }).then(() => {
-            return this.dataHandler.createDataDir();
-
-        }).catch((error) => {
+        }).then(() => (
+            this.dataHandler.createDataDir()
+        )).catch((error) => {
             Utils.logError('FATAL: Failed to initialize bot', error);
             throw new Error('Initializaion failure');
         });
@@ -78,6 +78,7 @@ module.exports = class Main {
 
     /**
      * Starts the event handler.
+     * @returns {void}
      */
     start() {
         this.runUpdate();
@@ -89,6 +90,7 @@ module.exports = class Main {
 
     /**
      * Scheduled 15 min interval bot update.
+     * @returns {void}
      */
     runUpdate() {
         let updateState = false;
@@ -124,14 +126,14 @@ module.exports = class Main {
      * @return {Promise} Resolves with a boolean if new tweets were retrievd when done processing.
      */
     handleTweets() {
-        return this.updateTracked().then(() => {
-            return this.retriever.retrieveTweets(this.state.trackedUsers);
+        return this.updateTracked().then(() => (
+            this.retriever.retrieveTweets(this.state.trackedUsers)
 
-        }).then((retrievals) => {
+        )).then((retrievals) => {
             const tweets = this.processRetrievals(retrievals);
 
             if (tweets.length > 0) {
-                Utils.log('Retrieved tweets: ' + tweets.length + ' tweets to process');
+                Utils.log(`Retrieved tweets: ${tweets.length} tweets to process`);
                 return this.dataHandler.saveTweetData(this.processor.processTweets(tweets));
             } else {
                 Utils.log('Retrieved tweets: No tweets to process');
@@ -141,9 +143,7 @@ module.exports = class Main {
             Utils.logError('Failed to retrieve new tweets, skipping until next update', error);
             return Promise.reject();
 
-        }).then(() => {
-            return true;
-        }, (error) => {
+        }).then(() => true, (error) => {
             if (error) {
                 Utils.logError('FATAL: Failed to save tweet data in database', error);
                 throw new Error('Database error');
@@ -156,8 +156,8 @@ module.exports = class Main {
     /**
      * Combines tweet retrievals to a single array of tweets and updates the state.
      * @private
-     * @param {2D Array} retrievals - An array of tweet retrievals (array).
-     * @return {Array} The array of all received tweets.
+     * @param {Object[]} retrievals - An array of tweet retrievals (array).
+     * @return {Object[]} The array of all received tweets.
      */
     processRetrievals(retrievals) {
         const tweets = [];
@@ -211,7 +211,7 @@ module.exports = class Main {
             const tweetsToSend = [];
 
             if (mentions.length > 0) {
-                Utils.log('Retrieved mentions: ' + mentions.length + ' new tweets found');
+                Utils.log(`Retrieved mentions: ${mentions.length} new tweets found`);
 
                 for (const mention of mentions) {
                     tweetsToSend.push({
@@ -246,7 +246,7 @@ module.exports = class Main {
             const tweet = this.generator.generateTweet(data);
 
             return this.twitterHandler.postTweet(tweet, replyID, replyUser).then(() => {
-                Utils.log('Generated & sent tweet: ' + tweet);
+                Utils.log(`Generated & sent tweet: ${tweet}`);
             }, (error) => {
                 Utils.logError('Failed to send tweet: Posting tweet (skipping)', error);
                 // TODO Determine if retryable and retry/exit depending on result
@@ -258,4 +258,6 @@ module.exports = class Main {
         });
     }
 
-};
+}
+
+module.exports = Main;

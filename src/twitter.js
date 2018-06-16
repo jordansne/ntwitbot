@@ -11,7 +11,7 @@ const Utils         = require('./utils.js');
 /**
  * Twitter API interactor class. Gets data directly from Twitter.
  */
-module.exports = class Twitter {
+class Twitter {
 
     /**
      * Initialize the class.
@@ -54,7 +54,7 @@ module.exports = class Twitter {
 
         if (idToReply) {
             data.in_reply_to_status_id = idToReply;
-            data.status = '@' + userToReply + ' ' + data.status;
+            data.status = `@${userToReply} ${data.status}`;
         }
 
         return this.postRequest('statuses/update', data).catch((error) => {
@@ -76,7 +76,7 @@ module.exports = class Twitter {
         };
 
         return this.postRequest('direct_messages/new', data).catch((error) => {
-            Utils.logError('Failed to send Direct Message to: ' + userID);
+            Utils.logError(`Failed to send Direct Message to: ${userID}`);
             throw error;
         });
     }
@@ -87,9 +87,7 @@ module.exports = class Twitter {
      * @return {Promise} Resolves with the mention data.
      */
     getMentions(requestData) {
-        return this.getRequest('statuses/mentions_timeline', requestData).then((mentions) => {
-            return mentions;
-        }, (error) => {
+        return this.getRequest('statuses/mentions_timeline', requestData).catch((error) => {
             Utils.logError('Failed to retrieve mentions from bot');
             throw error;
         });
@@ -119,7 +117,7 @@ module.exports = class Twitter {
      */
     getTweets(requestData) {
         return this.getRequest('statuses/user_timeline', requestData).catch((error) => {
-            Utils.logError('Failed to retrieve tweets from user: ' + requestData.user_id);
+            Utils.logError(`Failed to retrieve tweets from user: ${requestData.user_id}`);
             throw error;
         });
     }
@@ -162,4 +160,6 @@ module.exports = class Twitter {
         });
     }
 
-};
+}
+
+module.exports = Twitter;
