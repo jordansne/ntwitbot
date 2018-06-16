@@ -87,9 +87,7 @@ class Twitter {
      * @return {Promise} Resolves with the mention data.
      */
     getMentions(requestData) {
-        return this.getRequest('statuses/mentions_timeline', requestData).then((mentions) => {
-            return mentions;
-        }, (error) => {
+        return this.getRequest('statuses/mentions_timeline', requestData).catch((error) => {
             Utils.logError('Failed to retrieve mentions from bot');
             throw error;
         });

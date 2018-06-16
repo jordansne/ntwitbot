@@ -25,7 +25,8 @@ class Main {
      * @param {Object} setup - The setup object from the config.
      */
     constructor(secretData, setup) {
-        this.TWEET_INTERVAL = 15 /*min*/ * 60 /*s*/ * 1000 /*ms*/;
+        // 15 minutes
+        this.TWEET_INTERVAL = 15 * 60 * 1000;
 
         this.secretData = secretData;
         this.setup = setup;
@@ -49,10 +50,9 @@ class Main {
             Utils.log(`Verified Bot credentials, User ID is: ${userID}`);
 
             return this.initState();
-        }).then(() => {
-            return this.dataHandler.createDataDir();
-
-        }).catch((error) => {
+        }).then(() => (
+            this.dataHandler.createDataDir()
+        )).catch((error) => {
             Utils.logError('FATAL: Failed to initialize bot', error);
             throw new Error('Initializaion failure');
         });
@@ -126,10 +126,10 @@ class Main {
      * @return {Promise} Resolves with a boolean if new tweets were retrievd when done processing.
      */
     handleTweets() {
-        return this.updateTracked().then(() => {
-            return this.retriever.retrieveTweets(this.state.trackedUsers);
+        return this.updateTracked().then(() => (
+            this.retriever.retrieveTweets(this.state.trackedUsers)
 
-        }).then((retrievals) => {
+        )).then((retrievals) => {
             const tweets = this.processRetrievals(retrievals);
 
             if (tweets.length > 0) {
@@ -143,9 +143,7 @@ class Main {
             Utils.logError('Failed to retrieve new tweets, skipping until next update', error);
             return Promise.reject();
 
-        }).then(() => {
-            return true;
-        }, (error) => {
+        }).then(() => true, (error) => {
             if (error) {
                 Utils.logError('FATAL: Failed to save tweet data in database', error);
                 throw new Error('Database error');

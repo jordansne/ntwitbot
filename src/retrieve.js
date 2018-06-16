@@ -36,9 +36,7 @@ class Retrieve {
             mentionData.count = 200;
         }
 
-        return this.twitterHandler.getMentions(mentionData).then((mentions) => {
-            return mentions;
-        });
+        return this.twitterHandler.getMentions(mentionData);
     }
 
     /**
@@ -106,7 +104,7 @@ class Retrieve {
 
             // If the max ID from the request is the oldest tweet in the request (i.e. only one tweet returned)
             // or only one tweet was found on the first request..
-            if (request.max_id === tweets[tweets.length - 1].id_str || firstReq && tweets.length === 1) {
+            if (request.max_id === tweets[tweets.length - 1].id_str || (firstReq && tweets.length === 1)) {
                 tweetsRetrieved.push(tweets[0]);
 
                 Utils.log('    Retrieved 1 tweet');
@@ -131,7 +129,7 @@ class Retrieve {
             return {
                 done: false,
                 request: nextRequest,
-                tweetsRetrieved: tweetsRetrieved
+                tweetsRetrieved
             };
         }).then((next) => {
             if (!next.done) {
@@ -209,8 +207,8 @@ class Retrieve {
             return {
                 done: false,
                 request: nextRequest,
-                tweetsLeft: tweetsLeft,
-                tweetsRetrieved: tweetsRetrieved
+                tweetsLeft,
+                tweetsRetrieved
             };
         }).then((next) => {
             if (!next.done) {

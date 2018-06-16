@@ -79,7 +79,7 @@ class Process {
         const filteredWords = [];
 
         for (let i = 0; i < words.length; i++) {
-            let word = words[i];
+            const word = words[i];
 
             if (!(word.startsWith('@') || word.startsWith('http'))) {
                 filteredWords.push(word);
@@ -126,7 +126,7 @@ class Process {
      * @returns {void}
      */
     appendPeriod(words) {
-        let lastWord = words[words.length - 1];
+        const lastWord = words[words.length - 1];
 
         if (!Utils.endsWithPunc(lastWord) && !lastWord.endsWith(',')) {
             words[words.length - 1] += '.';

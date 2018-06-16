@@ -140,7 +140,7 @@ class Utils {
      * @return {boolean} True if the character is upper case.
      */
     isUpperCase(char) {
-        return char == char.toUpperCase();
+        return char === char.toUpperCase();
     }
 
     /**
@@ -159,7 +159,7 @@ class Utils {
      * @return {Array} The randomly shuffled array.
      */
     generateShuffledArray(n) {
-        let array = [];
+        const array = [];
 
         // Initialize the array
         for (let i = 0; i < n; i++) {
